@@ -209,37 +209,71 @@ def src_gpr():
         raise ValueError("no GPR rows")
     return out
 
+import re as _re
+
+def _cell_date(cell, datemode):
+    """Best-effort date from an xls cell: xldate float or common text formats.
+    Returns 'YYYY-MM-DD' or None."""
+    import xlrd
+    if isinstance(cell, (int, float)) and 10000 < cell < 80000:
+        try:
+            return xlrd.xldate_as_datetime(cell, datemode).strftime("%Y-%m-%d")
+        except Exception:
+            return None
+    if isinstance(cell, str):
+        s = cell.strip()
+        m = _re.match(r"^(\d{4})[-/\.](\d{1,2})([-/\.](\d{1,2}))?$", s)
+        if m:
+            return "%04d-%02d-%02d" % (int(m.group(1)), int(m.group(2)), int(m.group(4) or 1))
+        m = _re.match(r"^(\d{1,2})[-/\.](\d{4})$", s)
+        if m:
+            return "%04d-%02d-01" % (int(m.group(2)), int(m.group(1)))
+        m = _re.match(r"^([A-Za-z]{3,9})[- ](\d{2,4})$", s)
+        if m:
+            months = {"jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,"jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12}
+            mm = months.get(m.group(1)[:3].lower())
+            if mm:
+                yy = int(m.group(2))
+                if yy < 100:
+                    yy += 2000 if yy < 50 else 1900
+                return "%04d-%02d-01" % (yy, mm)
+    return None
+
 def src_gscpi():
-    """NY Fed serves this with an .xlsx name but it is legacy .xls; try xlrd first."""
+    """NY Fed GSCPI: legacy .xls served under an .xlsx name, layout not guaranteed.
+    Scans every sheet/row/column for a (date, number) pair; on failure raises with
+    diagnostics (sheet names + first rows) so the manifest error explains the layout."""
+    import xlrd
     raw = get("https://www.newyorkfed.org/medialibrary/research/interactives/gscpi/downloads/gscpi_data.xlsx", timeout=120).content
+    bk = xlrd.open_workbook(file_contents=raw)
     out = []
-    try:
-        import xlrd
-        bk = xlrd.open_workbook(file_contents=raw)
-        for si in range(bk.nsheets):
-            sh = bk.sheet_by_index(si)
-            for i in range(sh.nrows):
-                try:
-                    d = xlrd.xldate_as_datetime(sh.cell_value(i, 0), bk.datemode)
-                    out.append((d.strftime("%Y-%m-%d"), round(float(sh.cell_value(i, 1)), 3)))
-                except Exception:
-                    continue
-            if out:
-                break
-    except Exception:
-        import openpyxl
-        wb = openpyxl.load_workbook(io.BytesIO(raw), read_only=True, data_only=True)
-        for ws in wb.worksheets:
-            for row in ws.iter_rows(values_only=True):
-                if row and hasattr(row[0], "strftime"):
-                    for cell in row[1:]:
-                        if isinstance(cell, (int, float)):
-                            out.append((row[0].strftime("%Y-%m-%d"), round(float(cell), 3)))
-                            break
-            if out:
-                break
+    for si in range(bk.nsheets):
+        sh = bk.sheet_by_index(si)
+        for i in range(sh.nrows):
+            row = sh.row_values(i)
+            d = None
+            di = -1
+            for ci, cell in enumerate(row[:4]):
+                d = _cell_date(cell, bk.datemode)
+                if d:
+                    di = ci
+                    break
+            if not d:
+                continue
+            for cell in row[di + 1:]:
+                if isinstance(cell, (int, float)) and -50 < cell < 50:
+                    out.append((d, round(float(cell), 3)))
+                    break
+        if out:
+            break
     if not out:
-        raise ValueError("no GSCPI rows")
+        diag = "sheets=%s" % [bk.sheet_by_index(i).name for i in range(bk.nsheets)]
+        try:
+            sh0 = bk.sheet_by_index(0)
+            diag += " rows0-3=%s" % [sh0.row_values(i)[:4] for i in range(min(4, sh0.nrows))]
+        except Exception:
+            pass
+        raise ValueError("no GSCPI rows; " + diag)
     return sorted(out)
 
 def src_owid(slug):
@@ -690,7 +724,7 @@ def main():
             else:
                 payload = None
             if payload is None:
-                err = "%s: %s" % (type(e).__name__, str(e)[:160])
+                err = "%s: %s" % (type(e).__name__, str(e)[:400])
                 print("FAIL  %-14s %s" % (cid, err))
                 prev = old_manifest.get(cid, {})
                 manifest[cid] = {"status": "failed", "error": err,
