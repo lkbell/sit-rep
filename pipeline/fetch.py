@@ -247,13 +247,15 @@ def src_gscpi():
     raw = get("https://www.newyorkfed.org/medialibrary/research/interactives/gscpi/downloads/gscpi_data.xlsx", timeout=120).content
     bk = xlrd.open_workbook(file_contents=raw)
     out = []
-    for si in range(bk.nsheets):
+    # Prefer sheets whose name mentions "data" (the file has a branded cover sheet first).
+    order = sorted(range(bk.nsheets), key=lambda i: 0 if "data" in bk.sheet_by_index(i).name.lower() else 1)
+    for si in order:
         sh = bk.sheet_by_index(si)
         for i in range(sh.nrows):
             row = sh.row_values(i)
             d = None
             di = -1
-            for ci, cell in enumerate(row[:4]):
+            for ci, cell in enumerate(row):
                 d = _cell_date(cell, bk.datemode)
                 if d:
                     di = ci
@@ -269,8 +271,8 @@ def src_gscpi():
     if not out:
         diag = "sheets=%s" % [bk.sheet_by_index(i).name for i in range(bk.nsheets)]
         try:
-            sh0 = bk.sheet_by_index(0)
-            diag += " rows0-3=%s" % [sh0.row_values(i)[:4] for i in range(min(4, sh0.nrows))]
+            shd = bk.sheet_by_index(order[0])
+            diag += " datasheet_rows=%s" % [shd.row_values(i)[:8] for i in range(min(8, shd.nrows))]
         except Exception:
             pass
         raise ValueError("no GSCPI rows; " + diag)
