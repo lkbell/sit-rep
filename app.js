@@ -43,11 +43,11 @@
 
   function freshClass(cid) {
     var m = (MAN.charts || {})[cid] || {};
+    var cfg = CAT.charts[cid] || {};
     if (m.status === "failed") return "failed";
-    if (m.status === "manual") return "manual";
-    var exp = CAT.expect_days[(CAT.charts[cid] || {}).freq] || 75;
-    if (!m.last_obs) return "stale";
-    var age = (Date.now() - Date.parse(m.last_obs)) / 864e5;
+    var exp = cfg.exp || CAT.expect_days[cfg.freq] || 75;
+    var age = m.last_obs ? (Date.now() - Date.parse(m.last_obs)) / 864e5 : 1e9;
+    if (m.status === "manual") return age > (cfg.exp || 1e9) ? "stale" : "manual";
     return age > exp ? "stale" : "ok";
   }
 
@@ -79,9 +79,11 @@
     card.id = "c-" + cid;
     var fc = freshClass(cid);
     var m = (MAN.charts || {})[cid] || {};
-    var html = '<div class="top"><h3>' + cfg.title + '</h3><span class="dot ' + fc + '" title="' +
-      (fc === "failed" ? "feed error: " + (m.error || "") : fc === "manual" ? "curated series" : "last obs " + (m.last_obs || "?")) +
-      '"></span></div>';
+    var dotTitle = fc === "failed" ? "feed error: " + (m.error || "") :
+      fc === "manual" ? "curated series · through " + (m.last_obs || "?") :
+      fc === "stale" ? "stale — last obs " + (m.last_obs || "?") :
+      "current · last obs " + (m.last_obs || "?") + (cfg.exp ? " (source publishes with a lag)" : "");
+    var html = '<div class="top"><h3>' + cfg.title + '</h3><span class="dot ' + fc + '" title="' + dotTitle + '"></span></div>';
     html += '<div class="stat"><span class="val"></span><span class="unit"></span><span class="delta"></span></div>';
     html += '<div class="chart"></div>';
     if (cfg.kind !== "bars" && fc !== "failed") {
@@ -123,7 +125,7 @@
     var last = ss[0];
     card.querySelector(".val").textContent = fmtVal(last.v[last.v.length - 1], cfg);
     card.querySelector(".unit").textContent = unitSuffix(cfg);
-    card.querySelector(".delta").textContent = deltaStr(last, cfg);
+    card.querySelector(".delta").textContent = cfg.no_delta ? "" : deltaStr(last, cfg);
     charts[cid] = { data: data, cfg: cfg, host: host, names: ss.map(function (s) { return s.name; }) };
     var btns = card.querySelectorAll(".ranges button");
     btns.forEach(function (b) {
@@ -135,11 +137,11 @@
       };
     });
     var defYears = cfg.rng === "max" ? 9999 : (cfg.rng || 10);
-    charts[cid].years = defYears;
     var hit = null;
-    btns.forEach(function (b) { if (+b.dataset.y === defYears) hit = b; });
+    btns.forEach(function (b) { if (!hit && +b.dataset.y >= defYears) hit = b; });
+    if (!hit && btns.length) hit = btns[btns.length - 1];
+    charts[cid].years = hit ? +hit.dataset.y : defYears;
     if (hit) hit.classList.add("on");
-    else if (btns.length) btns[btns.length - 1].classList.add("on");
     redraw(cid);
   }
 
@@ -174,8 +176,14 @@
         size: 56,
         values: function (u, vals) {
           return vals.map(function (v) {
-            if (cfg.log) { var e = Math.round(Math.log10(v)); return "1e" + e; }
-            return fmtNum(v, Math.abs(v) < 10 && cfg.dec > 0 ? 1 : 0);
+            if (v == null) return "";
+            if (cfg.fmt === "sci") {
+              var e = Math.floor(Math.log10(v) + 1e-9);
+              var mant = v / Math.pow(10, e);
+              return (Math.abs(mant - 1) < 0.01 ? "" : Math.round(mant) + "×") + "1e" + e;
+            }
+            var s = fmtNum(v, Math.abs(v) < 10 && cfg.dec > 0 ? 1 : 0);
+            return cfg.fmt === "usd" ? "$" + s : s;
           });
         } }
     ];
@@ -301,6 +309,16 @@
   ]).then(function (res) {
     CAT = res[0]; MAN = res[1];
     document.getElementById("updated").textContent = MAN.generated_at ? "data as of " + MAN.generated_at : "";
+    var nFail = Object.keys(MAN.charts || {}).filter(function (k) {
+      return (MAN.charts[k] || {}).status === "failed";
+    }).length;
+    if (nFail > 0) {
+      var warn = document.createElement("span");
+      warn.style.color = "var(--failed)";
+      warn.style.fontWeight = "600";
+      warn.textContent = nFail + " feed" + (nFail > 1 ? "s" : "") + " failing";
+      document.getElementById("updated").after(warn);
+    }
     var nav = document.getElementById("nav");
     var home = document.createElement("a");
     home.href = "#/"; home.textContent = "Overview"; home.dataset.pg = "overview";

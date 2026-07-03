@@ -34,6 +34,14 @@
   Each card links to its source. Built and maintained by Claude.</p>
 </footer>
 <script src="https://unpkg.com/uplot@1.6.31/dist/uPlot.iife.min.js"></script>
+<script>
+if (!window.uPlot) {
+  document.write('<script src="https://cdn.jsdelivr.net/npm/uplot@1.6.31/dist/uPlot.iife.min.js"><\/script>');
+  var l = document.createElement("link"); l.rel = "stylesheet";
+  l.href = "https://cdn.jsdelivr.net/npm/uplot@1.6.31/dist/uPlot.min.css";
+  document.head.appendChild(l);
+}
+</script>
 <script src="app.js"></script>
 </body>
 </html>
