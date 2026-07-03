@@ -473,10 +473,10 @@ CATALOG = {
                      series=[dict(name="Interest outlays", src=["fred", "A091RC1Q027SBEA"])],
                      source_name="BEA via FRED", source_url=F + "A091RC1Q027SBEA"),
     # ---- housing ----
-    "cs_level": dict(sec="housing", title="Home prices: Case-Shiller national index", unit="index", fmt="num", dec=1, freq="m", rng="max",
+    "cs_level": dict(sec="housing", title="Home prices: Case-Shiller national index", unit="index", fmt="num", dec=1, freq="m", rng="max", exp=135,
                      series=[dict(name="Case-Shiller US", src=["fred", "CSUSHPINSA"])],
                      source_name="S&P CoreLogic via FRED", source_url=F + "CSUSHPINSA"),
-    "cs_yoy": dict(sec="housing", title="Home prices, YoY", unit="%", fmt="pct", dec=1, freq="m", rng=25, zero_line=True,
+    "cs_yoy": dict(sec="housing", title="Home prices, YoY", unit="%", fmt="pct", dec=1, freq="m", rng=25, zero_line=True, exp=135,
                    series=[dict(name="Case-Shiller YoY", src=["fred", "CSUSHPINSA"], tf=["yoy_m"])],
                    source_name="S&P CoreLogic via FRED", source_url=F + "CSUSHPINSA"),
     "mspus": dict(sec="housing", title="Median home sale price", unit="$K", fmt="usd", dec=0, freq="q", rng="max", exp=270,
@@ -563,7 +563,7 @@ CATALOG = {
                    source_name="Gallup", source_url="https://news.gallup.com/poll/341963/church-membership-falls-below-majority-first-time.aspx",
                    note="Gallup series; last reading 2020. A living replacement series is on the backlog."),
     # ---- tech & ai ----
-    "ai_compute": dict(sec="tech", title="AI training compute of notable models", unit="FLOP", fmt="sci", dec=0, freq="w", rng="max", kind="scatter", log=True,
+    "ai_compute": dict(sec="tech", title="AI training compute of notable models", unit="FLOP", fmt="sci", dec=0, freq="w", rng="max", kind="scatter", log=True, exp=60, no_delta=True,
                        series=[dict(name="Training FLOP", src=["epoch_scatter"])],
                        source_name="Epoch AI", source_url="https://epoch.ai/data/ai-models",
                        note="Each point is a notable model (log scale)."),
