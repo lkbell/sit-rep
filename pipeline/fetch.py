@@ -65,7 +65,7 @@ def src_cdc_overdose():
         ["January","February","March","April","May","June","July","August","September","October","November","December"], 1)}
     out = []
     for d in j:
-        val = d.get("data_value") or d.get("predicted_value")
+        val = d.get("predicted_value") or d.get("data_value")  # predicted corrects underreporting in recent months
         if not val:
             continue
         m = months.get(d["month"])
@@ -132,8 +132,9 @@ def src_epoch_releases():
             continue
         q = d[:4] + "-%02d-01" % ((int(d[5:7]) - 1) // 3 * 3 + 1)
         byq[q] = byq.get(q, 0) + 1
-    ks = sorted(byq)[:-1]  # drop the incomplete current quarter
-    return [(k, byq[k]) for k in ks]
+    now = datetime.now(timezone.utc)
+    curq = "%d-%02d-01" % (now.year, (now.month - 1) // 3 * 3 + 1)
+    return [(k, byq[k]) for k in sorted(byq) if k != curq]  # drop only the genuinely incomplete current quarter
 
 def src_rtci_snapshot():
     txt = get("https://raw.githubusercontent.com/AH-Datalytics/rtci/main/docs/app_data/full_table_data.csv", timeout=120).text
@@ -141,7 +142,9 @@ def src_rtci_snapshot():
     nat = [r for r in rows if "nationwide" in (r.get("type", "") + r.get("agency_full", "")).lower()]
     if not nat:
         raise ValueError("no nationwide rows")
-    seen, bars = set(), {"labels": [], "pct": [], "through": nat[0].get("Month_Through", "")}
+    dt = (nat[0].get("Date_Through") or "").strip()
+    seen, bars = set(), {"labels": [], "pct": [], "through": nat[0].get("Month_Through", ""),
+                         "date_through": dt if len(dt) == 10 else ""}
     order = ["Murders", "Rapes", "Robberies", "Aggravated Assaults", "Violent Crimes", "Burglaries", "Thefts", "Motor Vehicle Thefts", "Property Crimes"]
     nat.sort(key=lambda r: order.index(r["crime_type"]) if r["crime_type"] in order else 99)
     for r in nat:
@@ -177,6 +180,53 @@ def src_manual(name):
     with open(os.path.join(MANUAL, name + ".json")) as f:
         return json.load(f)
 
+def src_stooq(symbol):
+    txt = get("https://stooq.com/q/d/l/", {"s": symbol, "i": "d"}, timeout=120).text
+    rows = list(csv.reader(io.StringIO(txt)))
+    out = []
+    for row in rows[1:]:
+        if len(row) >= 5 and len(row[0]) == 10 and row[4]:
+            out.append((row[0], round(float(row[4]), 4)))
+    if not out:
+        raise ValueError("no stooq rows")
+    return out
+
+def src_gpr():
+    import xlrd
+    raw = get("https://www.matteoiacoviello.com/gpr_files/data_gpr_export.xls", timeout=120).content
+    bk = xlrd.open_workbook(file_contents=raw)
+    sh = bk.sheet_by_index(0)
+    hdr = [str(sh.cell_value(0, c)).strip().upper() for c in range(sh.ncols)]
+    vcol = hdr.index("GPR")
+    out = []
+    for i in range(1, sh.nrows):
+        try:
+            d = xlrd.xldate_as_datetime(sh.cell_value(i, 0), bk.datemode)
+            out.append((d.strftime("%Y-%m-%d"), round(float(sh.cell_value(i, vcol)), 2)))
+        except Exception:
+            continue
+    if not out:
+        raise ValueError("no GPR rows")
+    return out
+
+def src_gscpi():
+    import openpyxl
+    raw = get("https://www.newyorkfed.org/medialibrary/research/interactives/gscpi/downloads/gscpi_data.xlsx", timeout=120).content
+    wb = openpyxl.load_workbook(io.BytesIO(raw), read_only=True, data_only=True)
+    out = []
+    for ws in wb.worksheets:
+        for row in ws.iter_rows(values_only=True):
+            if row and hasattr(row[0], "strftime"):
+                for cell in row[1:]:
+                    if isinstance(cell, (int, float)):
+                        out.append((row[0].strftime("%Y-%m-%d"), round(float(cell), 3)))
+                        break
+        if out:
+            break
+    if not out:
+        raise ValueError("no GSCPI rows")
+    return sorted(out)
+
 def src_owid(slug):
     txt = get("https://ourworldindata.org/grapher/" + slug + ".csv", timeout=120).text
     rows = list(csv.reader(io.StringIO(txt)))
@@ -196,18 +246,26 @@ SOURCES = {
     "zillow": src_zillow, "yahoo": src_yahoo, "epoch_scatter": src_epoch_scatter,
     "epoch_releases": src_epoch_releases, "rtci_snapshot": src_rtci_snapshot,
     "eia_crude": src_eia_crude, "manual": src_manual, "owid": src_owid,
+    "stooq": src_stooq, "gpr": src_gpr, "gscpi": src_gscpi,
 }
 
 # ---------------- transforms ----------------
 
+def _mk(d):
+    return (int(d[:4]), int(d[5:7]))
+
 def t_yoy(pts, periods):
-    idx = {d: v for d, v in pts}
-    keys = [d for d, _ in pts]
+    """Calendar-aware YoY: compare to the observation in the same month one
+    year earlier (works for monthly and quarterly grids). Skips the point if
+    the base month is missing (e.g., the Oct-2025 CPI shutdown gap) rather
+    than silently comparing across 13 months."""
+    idx = {_mk(d): v for d, v in pts}
     out = []
-    for i in range(periods, len(keys)):
-        prev = idx[keys[i - periods]]
+    for d, v in pts:
+        y, m = _mk(d)
+        prev = idx.get((y - 1, m))
         if prev:
-            out.append((keys[i], round((idx[keys[i]] / prev - 1) * 100, 2)))
+            out.append((d, round((v / prev - 1) * 100, 2)))
     return out
 
 def t_diff(pts):
@@ -217,7 +275,26 @@ def t_ma(pts, n):
     return [(pts[i][0], round(sum(v for _, v in pts[i - n + 1:i + 1]) / n, 2)) for i in range(n - 1, len(pts))]
 
 def t_rollsum(pts, n):
-    return [(pts[i][0], round(sum(v for _, v in pts[i - n + 1:i + 1]), 2)) for i in range(n - 1, len(pts))]
+    """Calendar-aware trailing n-month sum; emits a point only when all n
+    calendar months are present."""
+    idx = {_mk(d): v for d, v in pts}
+    out = []
+    for d, v in pts:
+        y, m = _mk(d)
+        total, ok = 0.0, True
+        for k in range(n):
+            mm, yy = m - k, y
+            while mm < 1:
+                mm += 12
+                yy -= 1
+            vv = idx.get((yy, mm))
+            if vv is None:
+                ok = False
+                break
+            total += vv
+        if ok:
+            out.append((d, round(total, 2)))
+    return out
 
 def t_scale(pts, k):
     return [(d, round(v * k, 4)) for d, v in pts]
@@ -258,7 +335,7 @@ def thin(pts):
 
 # ---------------- catalog ----------------
 # chart: title, unit(label), fmt(pct|usd|num|sci), dec, freq(d/w/m/q/a/manual/snap),
-#        kind(line|scatter|bars), log, rng(default years or 'max'),
+#        kind(line|scatter|bars), log, rng(default years or 'max'), exp(days override),
 #        series: [{name, src:[adapter, arg], tf:[...]}], source_name, source_url, note
 
 SECTIONS = [
@@ -271,13 +348,15 @@ SECTIONS = [
     ("crime", "Crime", "Long-run murder rate and a real-time city sample."),
     ("society", "Society & politics", "Fertility, life expectancy, overdoses, marriage, trust, religion."),
     ("tech", "Tech & AI", "AI progress, chips, and the buildout."),
-    ("world", "World", "China and the external picture."),
+    ("world", "World", "China, geopolitics, and the external picture."),
 ]
 
 # Charts surfaced on the Overview landing page (order matters).
-OVERVIEW = ["sp500", "dgs10", "cpi_yoy", "unrate", "gdp_growth", "deficit12", "debt",
-            "mortgage30", "cs_yoy", "gas", "swb_fy", "murder_rate", "fertility",
-            "trust_media", "ai_compute", "btc"]
+# Composition: markets pulse -> the three best early-warning series (curve, credit,
+# claims + Sahm) -> inflation/jobs -> fiscal -> housing -> the slow structural trends.
+OVERVIEW = ["sp500", "dgs10", "t10y2y", "hy_oas", "icsa", "sahm", "cpi_yoy", "unrate",
+            "deficit12", "debt", "cs_yoy", "swb_fy", "murder_rate", "fertility",
+            "trust_media", "ai_compute"]
 
 F = "https://fred.stlouisfed.org/series/"
 
@@ -309,7 +388,8 @@ CATALOG = {
                    source_name="Federal Reserve via FRED", source_url=F + "DTWEXBGS"),
     "gold": dict(sec="markets", title="Gold", unit="$/oz", fmt="usd", dec=0, freq="d", rng=15,
                  series=[dict(name="Gold", src=["yahoo", "GC=F"])],
-                 source_name="COMEX via Yahoo Finance", source_url="https://finance.yahoo.com/quote/GC=F"),
+                 fallback=[dict(name="Gold", src=["stooq", "xauusd"])],
+                 source_name="COMEX via Yahoo Finance (fallback: Stooq)", source_url="https://finance.yahoo.com/quote/GC=F"),
     "btc": dict(sec="markets", title="Bitcoin", unit="$", fmt="usd", dec=0, freq="d", rng="max", log=True,
                 series=[dict(name="BTC", src=["fred", "CBBTCUSD"])],
                 source_name="Coinbase via FRED", source_url=F + "CBBTCUSD"),
@@ -330,7 +410,7 @@ CATALOG = {
     "unrate": dict(sec="economy", title="Unemployment rate", unit="%", fmt="pct", dec=1, freq="m", rng=25,
                    series=[dict(name="U-3", src=["fred", "UNRATE"])],
                    source_name="BLS via FRED", source_url=F + "UNRATE"),
-    "payems_chg": dict(sec="economy", title="Payrolls: monthly job growth", unit="thousands", fmt="num", dec=0, freq="m", rng=5, zero_line=True,
+    "payems_chg": dict(sec="economy", title="Payrolls: monthly job growth", unit="thousands", fmt="num", dec=0, freq="m", rng=5, zero_line=True, no_delta=True,
                        series=[dict(name="Nonfarm payrolls, m/m", src=["fred", "PAYEMS"], tf=["diff"])],
                        source_name="BLS via FRED", source_url=F + "PAYEMS"),
     "lfpr_prime": dict(sec="economy", title="Prime-age (25–54) labor force participation", unit="%", fmt="pct", dec=1, freq="m", rng=25,
@@ -342,7 +422,7 @@ CATALOG = {
     "icsa": dict(sec="economy", title="Initial jobless claims (4-week avg)", unit="thousands", fmt="num", dec=0, freq="w", rng=5,
                  series=[dict(name="Claims", src=["fred", "ICSA"], tf=[["ma", 4], ["scale", 1e-3]])],
                  source_name="DOL via FRED", source_url=F + "ICSA"),
-    "gdp_growth": dict(sec="economy", title="Real GDP growth (annualized, q/q)", unit="%", fmt="pct", dec=1, freq="q", rng=15, zero_line=True,
+    "gdp_growth": dict(sec="economy", title="Real GDP growth (annualized, q/q)", unit="%", fmt="pct", dec=1, freq="q", rng=15, zero_line=True, exp=270,
                        series=[dict(name="Real GDP", src=["fred", "A191RL1Q225SBEA"])],
                        source_name="BEA via FRED", source_url=F + "A191RL1Q225SBEA"),
     "wage_vs_cpi": dict(sec="economy", title="Wages vs. inflation, YoY", unit="%", fmt="pct", dec=1, freq="m", rng=10,
@@ -353,9 +433,10 @@ CATALOG = {
     "umcsent": dict(sec="economy", title="Consumer sentiment (U. Michigan)", unit="index", fmt="num", dec=1, freq="m", rng=25,
                     series=[dict(name="Sentiment", src=["fred", "UMCSENT"])],
                     source_name="U. Michigan via FRED", source_url=F + "UMCSENT"),
-    "retail_yoy": dict(sec="economy", title="Retail sales, YoY", unit="%", fmt="pct", dec=1, freq="m", rng=10, zero_line=True,
-                       series=[dict(name="Retail sales", src=["fred", "RSAFS"], tf=["yoy_m"])],
-                       source_name="Census via FRED", source_url=F + "RSAFS"),
+    "retail_yoy": dict(sec="economy", title="Real retail sales, YoY", unit="%", fmt="pct", dec=1, freq="m", rng=10, zero_line=True,
+                       series=[dict(name="Real retail sales", src=["fred", "RRSFS"], tf=["yoy_m"])],
+                       source_name="Census/BLS via FRED", source_url=F + "RRSFS",
+                       note="Inflation-adjusted — nominal retail sales can grow while real volumes shrink."),
     "indpro_yoy": dict(sec="economy", title="Industrial production, YoY", unit="%", fmt="pct", dec=1, freq="m", rng=25, zero_line=True,
                        series=[dict(name="Industrial production", src=["fred", "INDPRO"], tf=["yoy_m"])],
                        source_name="Federal Reserve via FRED", source_url=F + "INDPRO"),
@@ -366,14 +447,14 @@ CATALOG = {
     "debt": dict(sec="fiscal", title="Federal debt outstanding", unit="$T", fmt="usd", dec=2, freq="m", rng="max",
                  series=[dict(name="Total public debt", src=["treasury_debt"], tf=[["scale", 1e-12]])],
                  source_name="U.S. Treasury (Debt to the Penny)", source_url="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/"),
-    "debt_gdp": dict(sec="fiscal", title="Federal debt as % of GDP", unit="%", fmt="pct", dec=0, freq="q", rng="max",
+    "debt_gdp": dict(sec="fiscal", title="Federal debt as % of GDP", unit="%", fmt="pct", dec=0, freq="q", rng="max", exp=290,
                      series=[dict(name="Debt/GDP", src=["fred", "GFDEGDQ188S"])],
                      source_name="OMB/FRED", source_url=F + "GFDEGDQ188S"),
     "deficit12": dict(sec="fiscal", title="Federal deficit, trailing 12 months", unit="$B", fmt="usd", dec=0, freq="m", rng=25,
                       series=[dict(name="12-mo deficit", src=["fred", "MTSDS133FMS"], tf=[["rollsum", 12], "neg", ["scale", 1e-3]])],
                       source_name="U.S. Treasury via FRED", source_url=F + "MTSDS133FMS",
                       note="Positive = deficit. Monthly Treasury Statement, rolling 12-month sum."),
-    "interest": dict(sec="fiscal", title="Federal interest payments (annualized)", unit="$B", fmt="usd", dec=0, freq="q", rng="max",
+    "interest": dict(sec="fiscal", title="Federal interest payments (annualized)", unit="$B", fmt="usd", dec=0, freq="q", rng="max", exp=270,
                      series=[dict(name="Interest outlays", src=["fred", "A091RC1Q027SBEA"])],
                      source_name="BEA via FRED", source_url=F + "A091RC1Q027SBEA"),
     # ---- housing ----
@@ -383,7 +464,7 @@ CATALOG = {
     "cs_yoy": dict(sec="housing", title="Home prices, YoY", unit="%", fmt="pct", dec=1, freq="m", rng=25, zero_line=True,
                    series=[dict(name="Case-Shiller YoY", src=["fred", "CSUSHPINSA"], tf=["yoy_m"])],
                    source_name="S&P CoreLogic via FRED", source_url=F + "CSUSHPINSA"),
-    "mspus": dict(sec="housing", title="Median home sale price", unit="$K", fmt="usd", dec=0, freq="q", rng="max",
+    "mspus": dict(sec="housing", title="Median home sale price", unit="$K", fmt="usd", dec=0, freq="q", rng="max", exp=270,
                   series=[dict(name="Median price", src=["fred", "MSPUS"], tf=[["scale", 1e-3]])],
                   source_name="Census/HUD via FRED", source_url=F + "MSPUS"),
     "mortgage30": dict(sec="housing", title="30-year mortgage rate", unit="%", fmt="pct", dec=2, freq="w", rng="max",
@@ -404,9 +485,13 @@ CATALOG = {
     "zori": dict(sec="housing", title="Zillow observed rent index (U.S.)", unit="$/mo", fmt="usd", dec=0, freq="m", rng="max",
                  series=[dict(name="ZORI", src=["zillow", "zori"])],
                  source_name="Zillow Research", source_url="https://www.zillow.com/research/data/"),
-    "delinq": dict(sec="housing", title="Mortgage delinquency rate", unit="%", fmt="pct", dec=2, freq="q", rng="max",
+    "delinq": dict(sec="housing", title="Mortgage delinquency rate", unit="%", fmt="pct", dec=2, freq="q", rng="max", exp=290,
                    series=[dict(name="Single-family delinquency", src=["fred", "DRSFRMACBS"])],
                    source_name="Federal Reserve via FRED", source_url=F + "DRSFRMACBS"),
+    "inventory": dict(sec="housing", title="Homes for sale: active listings", unit="count", fmt="num", dec=0, freq="m", rng="max",
+                      series=[dict(name="Active listings", src=["fred", "ACTLISCOUUS"])],
+                      source_name="Realtor.com via FRED", source_url=F + "ACTLISCOUUS",
+                      note="Inventory turns before prices do. Series begins 2016."),
     # ---- energy ----
     "wti": dict(sec="energy", title="Crude oil (WTI)", unit="$/bbl", fmt="usd", dec=0, freq="d", rng=25,
                 series=[dict(name="WTI", src=["fred", "DCOILWTICO"])],
@@ -426,53 +511,55 @@ CATALOG = {
     # ---- immigration ----
     "swb_fy": dict(sec="immigration", title="Southwest border apprehensions by fiscal year (USBP)", unit="count", fmt="num", dec=0, freq="manual", rng="max",
                    series=[dict(name="SW apprehensions", src=["manual", "swb_fy"])],
-                   source_name="CBP", source_url="https://www.cbp.gov/newsroom/stats/southwest-land-border-encounters",
-                   note="Curated from CBP published fiscal-year data. FY2025: lowest since 1970. Monthly automated feed is on the backlog."),
+                   source_name="CBP", source_url="https://www.cbp.gov/newsroom/stats/southwest-land-border-encounters", exp=550,
+                   note="Curated from CBP published fiscal-year data; updated each fall when CBP closes the fiscal year."),
     # ---- crime ----
     "murder_rate": dict(sec="crime", title="Murder rate (per 100,000)", unit="per 100k", fmt="num", dec=1, freq="manual", rng="max",
                         series=[dict(name="Murder rate", src=["manual", "murder_rate"])],
-                        source_name="FBI UCR/CDE", source_url="https://cde.ucr.cjis.gov/",
+                        source_name="FBI UCR/CDE", source_url="https://cde.ucr.cjis.gov/", exp=700,
                         note="Curated from FBI annual estimates; updated when the FBI publishes each fall."),
-    "rtci_ytd": dict(sec="crime", title="Crime YTD vs. last year (real-time city sample)", unit="% change", fmt="pct", dec=1, freq="snap", kind="bars",
+    "rtci_ytd": dict(sec="crime", title="Crime YTD vs. last year (real-time city sample)", unit="% change", fmt="pct", dec=1, freq="snap", kind="bars", exp=130,
                      series=[dict(name="RTCI", src=["rtci_snapshot"])],
                      source_name="Real-Time Crime Index (AH Datalytics)", source_url="https://realtimecrimeindex.com/",
                      note="Sample of 300+ agencies reporting monthly; provisional, not official FBI totals."),
     # ---- society & politics ----
-    "overdoses": dict(sec="society", title="Drug overdose deaths (trailing 12 months)", unit="deaths", fmt="num", dec=0, freq="m", rng="max",
+    "overdoses": dict(sec="society", title="Drug overdose deaths (trailing 12 months)", unit="deaths", fmt="num", dec=0, freq="m", rng="max", exp=300,
                       series=[dict(name="12-mo overdose deaths", src=["cdc_overdose"])],
-                      source_name="CDC VSRR (provisional)", source_url="https://www.cdc.gov/nchs/nvss/vsrr/drug-overdose-data.htm"),
+                      source_name="CDC VSRR (provisional)", source_url="https://www.cdc.gov/nchs/nvss/vsrr/drug-overdose-data.htm",
+                      note="CDC publishes with about a 6-month lag; recent months use CDC's predicted (completeness-adjusted) counts."),
     "fertility": dict(sec="society", title="Total fertility rate", unit="births per woman", fmt="num", dec=2, freq="manual", rng="max",
-                      series=[dict(name="TFR", src=["manual", "fertility"])], zero_line=False,
+                      series=[dict(name="TFR", src=["manual", "fertility"])], zero_line=False, exp=650,
                       source_name="CDC NCHS", source_url="https://www.cdc.gov/nchs/nvss/births.htm",
-                      note="Replacement level ≈ 2.1. 2024 = 1.60, a record low. Curated annual data."),
+                      note="Replacement level ≈ 2.1. Curated annual data (CDC final)."),
     "life_exp": dict(sec="society", title="Life expectancy at birth", unit="years", fmt="num", dec=1, freq="manual", rng="max",
-                     series=[dict(name="Life expectancy", src=["manual", "life_exp"])],
+                     series=[dict(name="Life expectancy", src=["manual", "life_exp"])], exp=650,
                      source_name="CDC NCHS", source_url="https://www.cdc.gov/nchs/fastats/life-expectancy.htm",
-                     note="Curated annual data. 2024 = 79.0, back above the pre-COVID level."),
-    "marriage": dict(sec="society", title="Marriage rate (per 1,000 population)", unit="per 1,000", fmt="num", dec=1, freq="manual", rng="max",
+                     note="Curated annual data."),
+    "marriage": dict(sec="society", title="Marriage rate (per 1,000 population)", unit="per 1,000", fmt="num", dec=1, freq="manual", rng="max", exp=1400,
                      series=[dict(name="Marriage rate", src=["manual", "marriage"])],
                      source_name="CDC NCHS", source_url="https://www.cdc.gov/nchs/fastats/marriage-divorce.htm",
                      note="Curated annual data (provisional for recent years)."),
-    "trust_media": dict(sec="society", title="Trust in mass media (Gallup)", unit="% great deal / fair amount", fmt="pct", dec=0, freq="manual", rng="max",
+    "trust_media": dict(sec="society", title="Trust in mass media (Gallup)", unit="% great deal / fair amount", fmt="pct", dec=0, freq="manual", rng="max", exp=550,
                         series=[dict(name="Trust", src=["manual", "trust_media"])],
                         source_name="Gallup", source_url="https://news.gallup.com/poll/1663/media-use-evaluation.aspx",
-                        note="Curated from Gallup's annual survey. 2025 = 28%, a record low."),
+                        note="Curated from Gallup's annual survey (published each fall)."),
     "church": dict(sec="society", title="Church/synagogue/mosque membership (Gallup)", unit="%", fmt="pct", dec=0, freq="manual", rng="max",
                    series=[dict(name="Membership", src=["manual", "church"])],
                    source_name="Gallup", source_url="https://news.gallup.com/poll/341963/church-membership-falls-below-majority-first-time.aspx",
-                   note="Gallup series; last major reading 2020 (47%, first-ever minority)."),
+                   note="Gallup series; last reading 2020. A living replacement series is on the backlog."),
     # ---- tech & ai ----
     "ai_compute": dict(sec="tech", title="AI training compute of notable models", unit="FLOP", fmt="sci", dec=0, freq="w", rng="max", kind="scatter", log=True,
                        series=[dict(name="Training FLOP", src=["epoch_scatter"])],
                        source_name="Epoch AI", source_url="https://epoch.ai/data/ai-models",
-                       note="Each point is a notable model (log scale). The frontier keeps climbing ~4-5x/year."),
-    "ai_releases": dict(sec="tech", title="Notable AI model releases per quarter", unit="models", fmt="num", dec=0, freq="q", rng="max",
+                       note="Each point is a notable model (log scale)."),
+    "ai_releases": dict(sec="tech", title="Notable AI model releases per quarter", unit="models", fmt="num", dec=0, freq="q", rng="max", exp=200,
                         series=[dict(name="Releases", src=["epoch_releases"])],
                         source_name="Epoch AI", source_url="https://epoch.ai/data/ai-models"),
     "sox": dict(sec="tech", title="Semiconductor index (SOX)", unit="index", fmt="num", dec=0, freq="d", rng=10,
                 series=[dict(name="PHLX Semiconductor", src=["yahoo", "^SOX"])],
-                source_name="Yahoo Finance", source_url="https://finance.yahoo.com/quote/%5ESOX"),
-    "datacenter": dict(sec="tech", title="Data center construction spending (monthly)", unit="$B/mo", fmt="usd", dec=2, freq="m", rng="max",
+                fallback=[dict(name="PHLX Semiconductor", src=["stooq", "^sox"])],
+                source_name="Yahoo Finance (fallback: Stooq)", source_url="https://finance.yahoo.com/quote/%5ESOX"),
+    "datacenter": dict(sec="tech", title="Data center construction spending (monthly)", unit="$B/mo", fmt="usd", dec=2, freq="m", rng="max", exp=220,
                        series=[dict(name="Construction spend", src=["owid", "monthly-spending-data-center-us"], tf=[["scale", 1e-9]])],
                        source_name="Census C30 via Our World in Data",
                        source_url="https://ourworldindata.org/grapher/monthly-spending-data-center-us"),
@@ -480,10 +567,51 @@ CATALOG = {
     "usdcny": dict(sec="world", title="Dollar-yuan exchange rate", unit="CNY per USD", fmt="num", dec=3, freq="d", rng=15,
                    series=[dict(name="USD/CNY", src=["fred", "DEXCHUS"])],
                    source_name="Federal Reserve via FRED", source_url=F + "DEXCHUS"),
-    "china_trade": dict(sec="world", title="U.S.–China goods trade (monthly)", unit="$B", fmt="usd", dec=1, freq="m", rng=15,
+    "china_trade": dict(sec="world", title="U.S.–China goods trade (monthly)", unit="$B", fmt="usd", dec=1, freq="m", rng=15, exp=130,
                         series=[dict(name="Imports from China", src=["fred", "IMPCH"], tf=[["scale", 1e-3]]),
                                 dict(name="Exports to China", src=["fred", "EXPCH"], tf=[["scale", 1e-3]])],
                         source_name="Census via FRED", source_url=F + "IMPCH"),
+    # ---- v0.2 additions: leading / early-warning indicators (2026-07-03 review pass) ----
+    "sahm": dict(sec="economy", title="Sahm rule recession indicator", unit="pp", fmt="pct", dec=2, freq="m", rng=25,
+                 series=[dict(name="Sahm rule", src=["fred", "SAHMREALTIME"])],
+                 source_name="Federal Reserve via FRED", source_url=F + "SAHMREALTIME",
+                 note="Rise of 0.50 pp in the 3-month-avg unemployment rate off its 12-month low; a reading ≥ 0.50 has marked the start of every recession since 1970."),
+    "ccsa": dict(sec="economy", title="Continued jobless claims", unit="millions", fmt="num", dec=2, freq="w", rng=5,
+                 series=[dict(name="Continued claims", src=["fred", "CCSA"], tf=[["scale", 1e-6]])],
+                 source_name="DOL via FRED", source_url=F + "CCSA",
+                 note="Rising continued claims = laid-off workers not finding new jobs."),
+    "quits": dict(sec="economy", title="Quits rate (JOLTS)", unit="%", fmt="pct", dec=1, freq="m", rng=15,
+                  series=[dict(name="Quits rate", src=["fred", "JTSQUR"])],
+                  source_name="BLS JOLTS via FRED", source_url=F + "JTSQUR",
+                  note="Workers quit when confident; the quits rate turns before payrolls do."),
+    "temphelp": dict(sec="economy", title="Temp-help employment, YoY", unit="%", fmt="pct", dec=1, freq="m", rng=25, zero_line=True,
+                     series=[dict(name="Temp help YoY", src=["fred", "TEMPHELPS"], tf=["yoy_m"])],
+                     source_name="BLS via FRED", source_url=F + "TEMPHELPS",
+                     note="Temp staffing is cut first and hired first — it leads the broader labor market."),
+    "ppi_yoy": dict(sec="economy", title="Producer prices (PPI final demand), YoY", unit="%", fmt="pct", dec=1, freq="m", rng=15, zero_line=True,
+                    series=[dict(name="PPI YoY", src=["fred", "PPIFIS"], tf=["yoy_m"])],
+                    source_name="BLS via FRED", source_url=F + "PPIFIS",
+                    note="Pipeline inflation — producer prices tend to move before consumer prices."),
+    "cons_delinq": dict(sec="economy", title="Consumer loan delinquencies", unit="%", fmt="pct", dec=2, freq="q", rng="max", exp=290,
+                        series=[dict(name="Credit cards", src=["fred", "DRCCLACBS"]),
+                                dict(name="All consumer loans", src=["fred", "DRCLACBS"])],
+                        source_name="Federal Reserve via FRED", source_url=F + "DRCCLACBS"),
+    "sloos": dict(sec="markets", title="Banks tightening lending standards (C&I loans)", unit="% of banks, net", fmt="pct", dec=1, freq="q", rng="max", zero_line=True, exp=200,
+                  series=[dict(name="Net % tightening", src=["fred", "DRTSCILM"])],
+                  source_name="Fed SLOOS via FRED", source_url=F + "DRTSCILM",
+                  note="Senior Loan Officer Survey; credit tightening typically leads downturns by 2–3 quarters."),
+    "nfci": dict(sec="markets", title="Financial conditions (Chicago Fed NFCI)", unit="index (0 = avg)", fmt="num", dec=2, freq="w", rng=25, zero_line=True,
+                 series=[dict(name="NFCI", src=["fred", "NFCI"])],
+                 source_name="Chicago Fed via FRED", source_url=F + "NFCI",
+                 note="Positive = tighter than average financial conditions."),
+    "gpr": dict(sec="world", title="Geopolitical risk index (GPR)", unit="index", fmt="num", dec=0, freq="m", rng="max", exp=120,
+                series=[dict(name="GPR", src=["gpr"])],
+                source_name="Caldara & Iacoviello", source_url="https://www.matteoiacoviello.com/gpr.htm",
+                note="News-based index of geopolitical tensions, monthly since 1985."),
+    "gscpi": dict(sec="world", title="Global supply chain pressure (GSCPI)", unit="std devs from avg", fmt="num", dec=2, freq="m", rng="max", zero_line=True, exp=120,
+                  series=[dict(name="GSCPI", src=["gscpi"])],
+                  source_name="NY Fed", source_url="https://www.newyorkfed.org/research/policy/gscpi",
+                  note="Supply-chain stress shows up here before it shows up in goods prices."),
 }
 
 EXPECT_DAYS = {"d": 10, "w": 25, "m": 75, "q": 170, "a": 550, "snap": 75, "manual": None}
@@ -493,7 +621,7 @@ EXPECT_DAYS = {"d": 10, "w": 25, "m": 75, "q": 170, "a": 550, "snap": 75, "manua
 def build_chart(cid, cfg):
     if cfg.get("kind") == "bars":
         bars = SOURCES[cfg["series"][0]["src"][0]](*cfg["series"][0]["src"][1:])
-        return {"bars": bars}, bars.get("through", "")
+        return {"bars": bars}, bars.get("date_through") or bars.get("through", "")
     out = []
     for s in cfg["series"]:
         adapter = SOURCES[s["src"][0]]
