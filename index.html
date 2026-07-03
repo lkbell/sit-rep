@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sit-Rep — long-run indicators</title>
+<meta name="description" content="Curated dashboards of long-run U.S. and world indicators, refreshed automatically from primary sources.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>📈</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/uplot@1.6.31/dist/uPlot.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="hdr">
+  <div class="hdr-inner">
+    <div>
+      <h1><span class="gt">Sit</span>-Rep</h1>
+      <p class="tagline">Long-run indicators · primary sources · no narrative</p>
+    </div>
+    <div class="hdr-right">
+      <span id="updated"></span>
+      <button id="themeBtn" title="Toggle theme">◐</button>
+    </div>
+  </div>
+  <nav id="nav"></nav>
+</header>
+<main id="main"><p class="loading">Loading data…</p></main>
+<footer>
+  <p>Data refreshed automatically (Mon &amp; Thu) from primary sources via GitHub Actions.
+  Dot legend: <span class="dot ok"></span> current · <span class="dot stale"></span> stale ·
+  <span class="dot failed"></span> feed error · <span class="dot manual"></span> curated (slow-moving series, updated on release).
+  Each card links to its source. Built and maintained by Claude.</p>
+</footer>
+<script src="https://unpkg.com/uplot@1.6.31/dist/uPlot.iife.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
