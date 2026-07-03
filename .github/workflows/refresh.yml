@@ -1,0 +1,38 @@
+name: Refresh data
+
+on:
+  schedule:
+    - cron: "23 11 * * 1,4"   # Mon & Thu 11:23 UTC (~6:23am ET)
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["pipeline/**", ".github/workflows/refresh.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r pipeline/requirements.txt
+      - name: Fetch all series
+        run: python pipeline/fetch.py
+      - name: Commit refreshed data
+        run: |
+          git config user.name "groundtruth-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --cached --quiet && echo "No changes." && exit 0
+          git commit -m "data refresh $(date -u +%Y-%m-%dT%H:%M)"
+          git pull --rebase origin main
+          git push
