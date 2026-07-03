@@ -1,0 +1,296 @@
+{
+ "generated_at": "2026-07-03 19:23 UTC",
+ "charts": {
+  "sp500": {
+   "status": "ok",
+   "last_obs": "2026-07-02",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "nasdaq": {
+   "status": "ok",
+   "last_obs": "2026-07-02",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "dgs10": {
+   "status": "ok",
+   "last_obs": "2026-07-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "t10y2y": {
+   "status": "ok",
+   "last_obs": "2026-07-02",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "hy_oas": {
+   "status": "ok",
+   "last_obs": "2026-07-02",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "vix": {
+   "status": "ok",
+   "last_obs": "2026-07-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "dollar": {
+   "status": "ok",
+   "last_obs": "2026-06-26",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "gold": {
+   "status": "ok",
+   "last_obs": "2026-07-03",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "btc": {
+   "status": "ok",
+   "last_obs": "2026-07-02",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "fedfunds": {
+   "status": "ok",
+   "last_obs": "2026-06-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "walcl": {
+   "status": "ok",
+   "last_obs": "2026-07-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "m2_yoy": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "cpi_yoy": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "unrate": {
+   "status": "ok",
+   "last_obs": "2026-06-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "payems_chg": {
+   "status": "ok",
+   "last_obs": "2026-06-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "lfpr_prime": {
+   "status": "ok",
+   "last_obs": "2026-06-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "jtsjol": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "icsa": {
+   "status": "ok",
+   "last_obs": "2026-06-27",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "gdp_growth": {
+   "status": "ok",
+   "last_obs": "2026-01-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "wage_vs_cpi": {
+   "status": "ok",
+   "last_obs": "2026-06-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "umcsent": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "retail_yoy": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "indpro_yoy": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "t5yie": {
+   "status": "ok",
+   "last_obs": "2026-07-02",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "debt": {
+   "status": "ok",
+   "last_obs": "2026-07-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "debt_gdp": {
+   "status": "ok",
+   "last_obs": "2026-01-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "deficit12": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "interest": {
+   "status": "ok",
+   "last_obs": "2026-01-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "cs_level": {
+   "status": "ok",
+   "last_obs": "2026-04-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "cs_yoy": {
+   "status": "ok",
+   "last_obs": "2026-04-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "mspus": {
+   "status": "ok",
+   "last_obs": "2026-01-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "mortgage30": {
+   "status": "ok",
+   "last_obs": "2026-07-02",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "houst": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "permit": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "msacsr": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "zhvi": {
+   "status": "ok",
+   "last_obs": "2026-05-31",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "zori": {
+   "status": "ok",
+   "last_obs": "2026-05-31",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "delinq": {
+   "status": "ok",
+   "last_obs": "2026-01-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "wti": {
+   "status": "ok",
+   "last_obs": "2026-06-29",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "gas": {
+   "status": "ok",
+   "last_obs": "2026-06-29",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "natgas": {
+   "status": "ok",
+   "last_obs": "2026-06-29",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "elec": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "crude_prod": {
+   "status": "ok",
+   "last_obs": "2026-06-26",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "swb_fy": {
+   "status": "manual",
+   "last_obs": "2025-09-30",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "murder_rate": {
+   "status": "manual",
+   "last_obs": "2024-12-31",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "rtci_ytd": {
+   "status": "ok",
+   "last_obs": "Apr 2026",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "overdoses": {
+   "status": "ok",
+   "last_obs": "2026-01-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "fertility": {
+   "status": "manual",
+   "last_obs": "2024-12-31",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "life_exp": {
+   "status": "manual",
+   "last_obs": "2024-12-31",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "marriage": {
+   "status": "manual",
+   "last_obs": "2023-12-31",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "trust_media": {
+   "status": "manual",
+   "last_obs": "2025-12-31",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "church": {
+   "status": "manual",
+   "last_obs": "2020-12-31",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "ai_compute": {
+   "status": "ok",
+   "last_obs": "2026-06-04",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "ai_releases": {
+   "status": "ok",
+   "last_obs": "2026-01-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "sox": {
+   "status": "ok",
+   "last_obs": "2026-07-02",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "datacenter": {
+   "status": "failed",
+   "error": "HTTPError: 404 Client Error: Not Found for url: https://fred.stlouisfed.org/graph/fredgraph.csv?id=TLDCENCONS",
+   "last_obs": "",
+   "fetched_at": ""
+  },
+  "usdcny": {
+   "status": "ok",
+   "last_obs": "2026-06-26",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  },
+  "china_trade": {
+   "status": "ok",
+   "last_obs": "2026-04-01",
+   "fetched_at": "2026-07-03 19:23 UTC"
+  }
+ }
+}
