@@ -177,11 +177,25 @@ def src_manual(name):
     with open(os.path.join(MANUAL, name + ".json")) as f:
         return json.load(f)
 
+def src_owid(slug):
+    txt = get("https://ourworldindata.org/grapher/" + slug + ".csv", timeout=120).text
+    rows = list(csv.reader(io.StringIO(txt)))
+    hdr = rows[0]
+    ti = hdr.index("Day") if "Day" in hdr else hdr.index("Year")
+    out = []
+    for row in rows[1:]:
+        if row and row[0] == "United States" and row[-1]:
+            d = row[ti] if len(row[ti]) == 10 else row[ti] + "-12-31"
+            out.append((d, float(row[-1])))
+    if not out:
+        raise ValueError("no US rows in OWID csv")
+    return sorted(out)
+
 SOURCES = {
     "fred": src_fred, "treasury_debt": src_treasury_debt, "cdc_overdose": src_cdc_overdose,
     "zillow": src_zillow, "yahoo": src_yahoo, "epoch_scatter": src_epoch_scatter,
     "epoch_releases": src_epoch_releases, "rtci_snapshot": src_rtci_snapshot,
-    "eia_crude": src_eia_crude, "manual": src_manual,
+    "eia_crude": src_eia_crude, "manual": src_manual, "owid": src_owid,
 }
 
 # ---------------- transforms ----------------
@@ -458,9 +472,10 @@ CATALOG = {
     "sox": dict(sec="tech", title="Semiconductor index (SOX)", unit="index", fmt="num", dec=0, freq="d", rng=10,
                 series=[dict(name="PHLX Semiconductor", src=["yahoo", "^SOX"])],
                 source_name="Yahoo Finance", source_url="https://finance.yahoo.com/quote/%5ESOX"),
-    "datacenter": dict(sec="tech", title="Data center construction spending", unit="$B (SAAR)", fmt="usd", dec=1, freq="m", rng="max",
-                       series=[dict(name="Construction spend", src=["fred", "TLDCENCONS"], tf=[["scale", 1e-3]])],
-                       source_name="Census via FRED", source_url=F + "TLDCENCONS"),
+    "datacenter": dict(sec="tech", title="Data center construction spending (monthly)", unit="$B/mo", fmt="usd", dec=2, freq="m", rng="max",
+                       series=[dict(name="Construction spend", src=["owid", "monthly-spending-data-center-us"], tf=[["scale", 1e-9]])],
+                       source_name="Census C30 via Our World in Data",
+                       source_url="https://ourworldindata.org/grapher/monthly-spending-data-center-us"),
     # ---- world ----
     "usdcny": dict(sec="world", title="Dollar-yuan exchange rate", unit="CNY per USD", fmt="num", dec=3, freq="d", rng=15,
                    series=[dict(name="USD/CNY", src=["fred", "DEXCHUS"])],
