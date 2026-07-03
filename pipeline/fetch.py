@@ -210,19 +210,34 @@ def src_gpr():
     return out
 
 def src_gscpi():
-    import openpyxl
+    """NY Fed serves this with an .xlsx name but it is legacy .xls; try xlrd first."""
     raw = get("https://www.newyorkfed.org/medialibrary/research/interactives/gscpi/downloads/gscpi_data.xlsx", timeout=120).content
-    wb = openpyxl.load_workbook(io.BytesIO(raw), read_only=True, data_only=True)
     out = []
-    for ws in wb.worksheets:
-        for row in ws.iter_rows(values_only=True):
-            if row and hasattr(row[0], "strftime"):
-                for cell in row[1:]:
-                    if isinstance(cell, (int, float)):
-                        out.append((row[0].strftime("%Y-%m-%d"), round(float(cell), 3)))
-                        break
-        if out:
-            break
+    try:
+        import xlrd
+        bk = xlrd.open_workbook(file_contents=raw)
+        for si in range(bk.nsheets):
+            sh = bk.sheet_by_index(si)
+            for i in range(sh.nrows):
+                try:
+                    d = xlrd.xldate_as_datetime(sh.cell_value(i, 0), bk.datemode)
+                    out.append((d.strftime("%Y-%m-%d"), round(float(sh.cell_value(i, 1)), 3)))
+                except Exception:
+                    continue
+            if out:
+                break
+    except Exception:
+        import openpyxl
+        wb = openpyxl.load_workbook(io.BytesIO(raw), read_only=True, data_only=True)
+        for ws in wb.worksheets:
+            for row in ws.iter_rows(values_only=True):
+                if row and hasattr(row[0], "strftime"):
+                    for cell in row[1:]:
+                        if isinstance(cell, (int, float)):
+                            out.append((row[0].strftime("%Y-%m-%d"), round(float(cell), 3)))
+                            break
+            if out:
+                break
     if not out:
         raise ValueError("no GSCPI rows")
     return sorted(out)
