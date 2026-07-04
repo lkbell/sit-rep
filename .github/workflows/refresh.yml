@@ -2,7 +2,7 @@ name: Refresh data
 
 on:
   schedule:
-    - cron: "23 11 * * 1,4"   # Mon & Thu 11:23 UTC (~6:23am ET)
+    - cron: "23 14 * * 1-5"   # Mon & Thu 14:23 UTC (~10:23am ET)
   workflow_dispatch:
   push:
     branches: [main]
