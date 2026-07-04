@@ -1,0 +1,82 @@
+{
+"sp500": {
+ "what": "A market-cap-weighted index of ~500 of the largest U.S. companies — the broadest single gauge of American equities, and what most retirement money tracks.",
+ "why": "It is forward-looking: prices embed investors' collective bets on future profits, interest rates, and risk. It moves before the economic data does — though it also false-alarms.",
+ "noteworthy": "Weekly moves beyond ±5% signal real stress or euphoria. A drop of 20% from the peak is a bear market — there have been 12 since 1950, averaging about −33%."
+},
+"dgs10": {
+ "what": "The yield the U.S. government pays to borrow for 10 years — the benchmark interest rate for the world.",
+ "why": "It anchors mortgage and corporate borrowing costs, and it rises when markets expect more inflation or growth — or worry about absorbing more Treasury debt.",
+ "noteworthy": "Moves over 0.5pp in a month are rare and consequential. The full range runs from 0.5% (2020) to 15.8% (1981); a sustained push above ~5% would strain housing and the federal interest bill."
+},
+"t10y2y": {
+ "what": "The gap between 10-year and 2-year Treasury yields — the slope of the yield curve.",
+ "why": "When it inverts (goes negative), markets are betting the Fed will have to cut rates — historically because a downturn is coming.",
+ "noteworthy": "Inversion has preceded every U.S. recession since the late 1970s, usually by 6–24 months, with rare false alarms (1998). The re-steepening back through zero often lands closer to the downturn itself."
+},
+"hy_oas": {
+ "what": "The extra yield investors demand to hold junk-rated corporate bonds instead of Treasuries.",
+ "why": "It is a real-money gauge of default fear — credit stress usually shows up here before it shows up in stocks or headlines.",
+ "noteworthy": "Below 3pp is calm; above 5pp is stress; above 8pp is crisis territory. COVID peaked near 11pp, 2008 near 20pp."
+},
+"icsa": {
+ "what": "How many Americans filed first-time unemployment claims each week (4-week average) — the fastest official labor-market signal.",
+ "why": "Layoffs appear here within days, months before they reach the unemployment rate.",
+ "noteworthy": "Sub-250K is historically healthy. Direction beats level: a sustained climb of 15–20% off the recent low has accompanied every labor-market turn."
+},
+"sahm": {
+ "what": "How far the 3-month average unemployment rate has risen above its low from the past 12 months.",
+ "why": "It converts slow-moving unemployment data into a recession trigger with a near-perfect historical record, designed to fire early in a downturn.",
+ "noteworthy": "A reading of 0.50pp or more marked the start of every recession since 1970. The one modern caveat: it tripped in mid-2024 without a recession following — unusual labor-supply shifts can distort it."
+},
+"cpi_yoy": {
+ "what": "How much consumer prices rose versus a year ago; the core line strips out volatile food and energy.",
+ "why": "This is THE inflation number — it sets real-wage math, Social Security adjustments, and Federal Reserve policy.",
+ "noteworthy": "The Fed targets about 2% (on PCE, a related gauge that runs slightly cooler). Headline above 5% is rare outside the 1970s and 2021–23. Core is the trend; headline is the noise."
+},
+"unrate": {
+ "what": "The share of the labor force actively looking for work.",
+ "why": "The headline gauge of labor-market health — slow to turn, but decisive when it does.",
+ "noteworthy": "Below 4% is historically tight. Recessions typically add 2–5pp. It lags the cycle — watch 3+ month direction, not single prints (the Sahm chart converts this series into an early trigger)."
+},
+"deficit12": {
+ "what": "The gap between federal spending and revenue over the trailing 12 months.",
+ "why": "This is the pace of new borrowing — the flow that feeds the debt. Deficits this large outside war or recession are historically novel.",
+ "noteworthy": "Roughly $900B (~3% of GDP) was the pre-2020 norm; a sustained ~$2T deficit at full employment is the current anomaly. Watch the trend through tax season (April) swings."
+},
+"debt": {
+ "what": "Total federal debt outstanding, updated daily by the Treasury.",
+ "why": "The accumulated stock the deficit flows into. Interest on it now rivals defense as a budget line, which feeds back into the deficit itself.",
+ "noteworthy": "Gross debt crossed 100% of GDP around 2013 and kept going. Recent pace: roughly $1T added every five to six months."
+},
+"cs_yoy": {
+ "what": "Year-over-year change in prices of the same homes selling twice (Case-Shiller repeat-sales method — the gold standard, published with a ~2-month lag).",
+ "why": "Housing is most households' largest asset and purchase; price momentum drives wealth effects, affordability, and construction.",
+ "noteworthy": "The long-run norm is about +3–5% a year. Above +10% is boom territory (2005, 2021). Sustained negative prints have one modern precedent: 2007–11."
+},
+"swb_fy": {
+ "what": "Border Patrol apprehensions between ports of entry on the southwest border, per federal fiscal year (Oct–Sep).",
+ "why": "The longest-running consistent gauge of illegal-crossing volume — monthly numbers make headlines, but this series shows the regime shifts.",
+ "noteworthy": "The 1986 and 2000 waves peaked near 1.6M. The 2017 modern low was 304K. FY2021–23 set all-time records above 2M. FY2025 came in at 238K — the lowest since 1970."
+},
+"murder_rate": {
+ "what": "Homicides per 100,000 people, from FBI annual national estimates.",
+ "why": "The best-measured crime statistic (bodies get counted; lesser crimes go unreported at varying rates) — the cleanest proxy for violent-crime trends.",
+ "noteworthy": "The 1980 peak hit 10.2; the 1990s decline cut it roughly in half. 2020 saw the largest one-year jump on record (~+29%), which fully reversed by 2024 (~5.0)."
+},
+"fertility": {
+ "what": "The number of children the average woman would have over her lifetime at current birth rates.",
+ "why": "Below ~2.1, population shrinks without immigration. Today's number sets school enrollment, workforce size, and entitlement solvency decades ahead.",
+ "noteworthy": "The U.S. fell below replacement in 2008 and never recovered; 1.60 (2024) is the record low. Most developed peers are lower still — South Korea is under 0.8."
+},
+"trust_media": {
+ "what": "The share of Americans telling Gallup they have a great deal or fair amount of trust in mass media to report the news fully, accurately, and fairly.",
+ "why": "A proxy for whether the country still has a shared factual baseline — and for the audience migration to alternative information sources.",
+ "noteworthy": "Trust peaked at 72% in 1976 (post-Watergate) and hit 28% in 2025. The decline spans all groups but is deepest among Republicans (8%) and independents (27%)."
+},
+"ai_compute": {
+ "what": "The computing power (FLOP) used to train each notable AI model — one dot per model, on a log scale where each gridline is 10x the one below.",
+ "why": "Training compute has been the strongest single predictor of AI capability. The slope of the top edge IS the pace of the AI race.",
+ "noteworthy": "Frontier training compute has grown roughly 4–5x per year since 2010 — about 10,000x per decade. A flattening of the top edge would signal a genuine regime change in AI progress."
+}
+}
