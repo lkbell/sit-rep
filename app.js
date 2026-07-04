@@ -1,7 +1,7 @@
 /* Sit-Rep front-end. Vanilla JS + uPlot. Hash-routed pages: #/ (overview), #/<section>. */
 (function () {
   "use strict";
-  var CAT = null, MAN = null, charts = {}, PAYLOADS = {}, io = null;
+  var CAT = null, MAN = null, EXP = {}, charts = {}, PAYLOADS = {}, io = null;
 
   /* theme */
   var pref = localStorage.getItem("gt-theme") ||
@@ -84,7 +84,10 @@
       fc === "manual" ? "curated series · through " + (m.last_obs || "?") :
       fc === "stale" ? "stale — last obs " + (m.last_obs || "?") :
       "current · last obs " + (m.last_obs || "?") + (cfg.exp ? " (source publishes with a lag)" : "");
-    var html = '<div class="top"><h3>' + cfg.title + '</h3><span class="dot ' + fc + '" title="' + dotTitle + '"></span></div>';
+    var ex = EXP[cid];
+    var html = '<div class="top"><h3>' + cfg.title + "</h3>" +
+      (ex ? '<button class="info" title="What is this?" aria-label="Explain this chart">i</button>' : "") +
+      '<span class="dot ' + fc + '" title="' + dotTitle + '"></span></div>';
     html += '<div class="stat"><span class="val"></span><span class="unit"></span><span class="delta"></span></div>';
     html += '<div class="chart"></div>';
     if (cfg.kind !== "bars" && fc !== "failed") {
@@ -92,10 +95,23 @@
         return '<button data-y="' + r[1] + '">' + r[0] + "</button>";
       }).join("") + "</div>";
     }
+    if (ex) {
+      html += '<div class="explain" hidden>' +
+        '<p><span class="xl">What it measures.</span> ' + ex.what + "</p>" +
+        '<p><span class="xl">Why it matters.</span> ' + ex.why + "</p>" +
+        '<p><span class="xl">What noteworthy looks like.</span> ' + ex.noteworthy + "</p></div>";
+    }
     if (cfg.note) html += '<div class="note">' + cfg.note + "</div>";
     html += '<div class="foot"><a href="' + cfg.source_url + '" target="_blank" rel="noopener">' + cfg.source_name +
       '</a><span>' + (m.last_obs ? "through " + m.last_obs : "") + "</span></div>";
     card.innerHTML = html;
+    if (ex) {
+      card.querySelector(".info").onclick = function () {
+        var d = card.querySelector(".explain");
+        d.hidden = !d.hidden;
+        this.classList.toggle("on", !d.hidden);
+      };
+    }
     return card;
   }
 
@@ -306,9 +322,10 @@
 
   Promise.all([
     fetch("data/catalog.json").then(function (r) { return r.json(); }),
-    fetch("data/manifest.json").then(function (r) { return r.json(); }).catch(function () { return { charts: {} }; })
+    fetch("data/manifest.json").then(function (r) { return r.json(); }).catch(function () { return { charts: {} }; }),
+    fetch("explainers.json").then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
   ]).then(function (res) {
-    CAT = res[0]; MAN = res[1];
+    CAT = res[0]; MAN = res[1]; EXP = res[2] || {};
     document.getElementById("updated").textContent = MAN.generated_at ? "data as of " + MAN.generated_at : "";
     var nFail = Object.keys(MAN.charts || {}).filter(function (k) {
       return (MAN.charts[k] || {}).status === "failed";
