@@ -228,9 +228,14 @@ def _cell_date(cell, datemode):
         m = _re.match(r"^(\d{1,2})[-/\.](\d{4})$", s)
         if m:
             return "%04d-%02d-01" % (int(m.group(2)), int(m.group(1)))
+        months = {"jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,"jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12}
+        m = _re.match(r"^(\d{1,2})[- ]([A-Za-z]{3,9})[- ](\d{4})$", s)
+        if m:
+            mm = months.get(m.group(2)[:3].lower())
+            if mm:
+                return "%04d-%02d-%02d" % (int(m.group(3)), mm, int(m.group(1)))
         m = _re.match(r"^([A-Za-z]{3,9})[- ](\d{2,4})$", s)
         if m:
-            months = {"jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,"jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12}
             mm = months.get(m.group(1)[:3].lower())
             if mm:
                 yy = int(m.group(2))
