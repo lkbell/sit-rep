@@ -18,6 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
 MANUAL = os.path.join(ROOT, "pipeline", "manual")
 UA = {"User-Agent": "Mozilla/5.0 (GroundTruth dashboard; github.com/lkbell/sit-rep)"}
+
 SIGNALS_ENABLED = True  # kill switch: set False and push to remove signals from the site entirely
 
 def get(url, params=None, timeout=60):
@@ -298,144 +299,69 @@ def src_owid(slug):
         raise ValueError("no US rows in OWID csv")
     return sorted(out)
 
-
-# ---- v0.3 adapters: border encounters, presidential approval, election odds ----
-
-_CBP_MEM = {}
-
-def src_cbp_monthly(region):
-    """CBP 'Nationwide Encounters' dashboard CSVs -> monthly encounter totals.
-    Scrapes the stats page for the by-AOR dataset files (final-FY archives plus
-    the newest FYTD monthly file), sums Encounter Count per calendar month;
-    newer files overwrite overlapping months. region: 'all' (nationwide) or
-    'sw' (Southwest land border rows only). Raises with diagnostics (link list
-    or CSV header) when the page or file layout drifts."""
-    if region not in ("all", "sw"):
-        raise ValueError("region must be 'all' or 'sw'")
-    if not _CBP_MEM:
-        page = get("https://www.cbp.gov/document/stats/nationwide-encounters", timeout=120).text
-        links = _re.findall(r'href="([^"]*nationwide-encounters[^"]*-aor[^"]*\.csv)"', page)
-        links = list(dict.fromkeys(u if u.startswith("http") else "https://www.cbp.gov" + u for u in links))
-        mpat = _re.compile(r'-(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)-aor', _re.I)
-        def endfy(u):
-            m = _re.search(r'fy(\d{2})-aor', u)
-            return m.group(1) if m else "00"
-        archives = sorted([u for u in links if not mpat.search(u)], key=endfy)
-        dated = []
-        for u in links:
-            m = _re.search(r'/files/(\d{4}-\d{2})/', u)
-            if mpat.search(u) and m:
-                dated.append((m.group(1), u))
-        use = archives + [max(dated)[1]] if dated else archives
-        if not use:
-            raise ValueError("no encounters CSVs found on stats page; %d matching hrefs, sample=%s" % (len(links), links[:3]))
-        mon = {"OCT": 10, "NOV": 11, "DEC": 12, "JAN": 1, "FEB": 2, "MAR": 3, "APR": 4,
-               "MAY": 5, "JUN": 6, "JUL": 7, "AUG": 8, "SEP": 9}
-        agg = {"all": {}, "sw": {}}
-        for u in use:
-            txt = get(u, timeout=300).text
-            rdr = csv.DictReader(io.StringIO(txt))
-            cols = rdr.fieldnames or []
-            def pick(frag):
-                for c in cols:
-                    if frag in c.lower().strip():
-                        return c
-                raise ValueError("no %r column in %s; header=%s" % (frag, u.rsplit("/", 1)[-1], cols[:14]))
-            fy_c, mo_c, rg_c, ct_c = pick("fiscal year"), pick("month (abbv"), pick("land border region"), pick("encounter count")
-            cur = {"all": {}, "sw": {}}
-            for r in rdr:
-                m = mon.get((r.get(mo_c) or "").strip().upper()[:3])
-                fym = _re.search(r"\d{4}", r.get(fy_c) or "")
-                if not m or not fym:
-                    continue
-                try:
-                    n = int(float((r.get(ct_c) or "").replace(",", "") or 0))
-                except ValueError:
-                    continue
-                fy = int(fym.group())
-                d = "%04d-%02d-01" % (fy - 1 if m >= 10 else fy, m)
-                cur["all"][d] = cur["all"].get(d, 0) + n
-                if (r.get(rg_c) or "").strip() == "Southwest Land Border":
-                    cur["sw"][d] = cur["sw"].get(d, 0) + n
-            if len(cur["all"]) < 12:
-                raise ValueError("only %d months parsed from %s" % (len(cur["all"]), u.rsplit("/", 1)[-1]))
-            agg["all"].update(cur["all"])
-            agg["sw"].update(cur["sw"])
-        if len(agg["all"]) < 60:
-            raise ValueError("only %d total months aggregated from %d files" % (len(agg["all"]), len(use)))
-        for k in agg:
-            _CBP_MEM[k] = sorted(agg[k].items())
-    return _CBP_MEM[region]
-
-def src_votehub_approval(choice):
-    """Presidential approval: an average this pipeline computes from raw polls
-    in VoteHub's open poll feed (no key). Mean of all polls whose field-date
-    midpoint falls in each trailing 14-day window, stepped weekly from the
-    start of the current term (2025-01-20). Unweighted; no house adjustments.
-    choice: 'Approve' or 'Disapprove'."""
-    from datetime import date, timedelta
-    j = get("https://api.votehub.com/polls", {"poll_type": "approval", "page_size": 10000}, timeout=120).json()
-    if not isinstance(j, list):
-        raise ValueError("votehub: unexpected response %s" % str(j)[:200])
-    term = date(2025, 1, 20)
-    polls = []
+def src_votehub_approval(which):
+    """Presidential approval: simple 14-day trailing mean of all public polls on
+    VoteHub (unweighted), stepped weekly. which = 'approve' or 'disapprove'."""
+    from datetime import timedelta
+    j = get("https://api.votehub.com/polls", {"poll_type": "approval", "page_size": 2000}, timeout=120).json()
+    pts = []
     for p in j:
-        if p.get("subject") != "Donald Trump":
+        if p.get("subject") != "Donald Trump" or not p.get("end_date"):
             continue
-        sd, ed = str(p.get("start_date") or ""), str(p.get("end_date") or "")
-        if len(sd) < 10 or len(ed) < 10:
-            continue
-        try:
-            d0 = date(int(sd[:4]), int(sd[5:7]), int(sd[8:10]))
-            d1 = date(int(ed[:4]), int(ed[5:7]), int(ed[8:10]))
-        except ValueError:
-            continue
-        mid = d0 + (d1 - d0) / 2
-        if mid < term:
-            continue
-        for a in p.get("answers") or []:
-            if (a.get("choice") or "").strip().lower() == choice.lower():
-                try:
-                    polls.append((mid, float(a["pct"])))
-                except (TypeError, ValueError):
-                    pass
-                break
-    if len(polls) < 25:
-        raise ValueError("votehub: only %d usable Trump approval polls (of %d records)" % (len(polls), len(j)))
-    polls.sort()
-    last = polls[-1][0]
-    out = []
-    d = term + timedelta(days=14)
-    while d <= last:
-        win = [v for m, v in polls if d - timedelta(days=14) < m <= d]
+        a = d_ = None
+        for ans in p.get("answers", []):
+            c = (ans.get("choice") or "").lower()
+            if c == "approve":
+                a = ans.get("pct")
+            elif c == "disapprove":
+                d_ = ans.get("pct")
+        if a is not None and d_ is not None:
+            pts.append((p["end_date"][:10], float(a), float(d_)))
+    pts.sort()
+    if len(pts) < 20:
+        raise ValueError("too few usable approval polls: %d of %d records" % (len(pts), len(j)))
+    idx = 1 if which == "approve" else 2
+    start = datetime.strptime(pts[0][0], "%Y-%m-%d") + timedelta(days=14)
+    end = datetime.strptime(pts[-1][0], "%Y-%m-%d")
+    out, cur = [], start
+    while cur <= end:
+        lo = (cur - timedelta(days=14)).strftime("%Y-%m-%d")
+        hi = cur.strftime("%Y-%m-%d")
+        win = [p[idx] for p in pts if lo < p[0] <= hi]
         if win:
-            out.append((d.strftime("%Y-%m-%d"), round(sum(win) / len(win), 1)))
-        d += timedelta(days=7)
-    if len(out) < 4:
-        raise ValueError("votehub: only %d weekly points computed" % len(out))
+            out.append((hi, round(sum(win) / len(win), 1)))
+        cur += timedelta(days=7)
+    if not out:
+        raise ValueError("no poll windows produced")
     return out
 
-def src_polymarket(market_slug):
-    """Daily 'Yes' probability (percent) for one Polymarket market: gamma API
-    for market metadata/token id, then CLOB prices-history at daily fidelity."""
-    j = get("https://gamma-api.polymarket.com/markets", {"slug": market_slug}, timeout=60).json()
-    if not isinstance(j, list) or not j:
-        raise ValueError("polymarket: no market for slug %s" % market_slug)
-    mkt = j[0]
-    outcomes = json.loads(mkt.get("outcomes") or "[]")
-    toks = json.loads(mkt.get("clobTokenIds") or "[]")
-    if not toks or not outcomes or outcomes[0] != "Yes":
-        raise ValueError("polymarket: unexpected market shape for %s (outcomes=%s, %d tokens)" % (market_slug, outcomes[:2], len(toks)))
-    h = get("https://clob.polymarket.com/prices-history",
-            {"market": toks[0], "interval": "max", "fidelity": 1440}, timeout=60).json().get("history") or []
-    if len(h) < 5:
-        raise ValueError("polymarket: empty price history for %s" % market_slug)
-    bym = {}
-    for p in h:
-        d = datetime.fromtimestamp(int(p["t"]), tz=timezone.utc).strftime("%Y-%m-%d")
-        bym[d] = round(float(p["p"]) * 100, 1)  # last point of each UTC day wins
-    return sorted(bym.items())
-
+def src_polymarket_dem(chamber):
+    """Implied probability (%) of Democratic control of a chamber after the 2026
+    midterms, from Polymarket. Self-discovers the market via public-search, then
+    pulls daily price history from the CLOB."""
+    q = "Which party will win the %s in 2026" % chamber
+    j = get("https://gamma-api.polymarket.com/public-search", {"q": q, "limit_per_type": 5}, timeout=60).json()
+    token = None
+    for ev in j.get("events", []):
+        title = (ev.get("title") or "").lower()
+        if chamber.lower() not in title or "2026" not in title:
+            continue
+        for m in ev.get("markets", []):
+            if m.get("groupItemTitle") == "Democratic Party" and m.get("clobTokenIds"):
+                token = json.loads(m["clobTokenIds"])[0]
+                break
+        if token:
+            break
+    if not token:
+        raise ValueError("no Democratic-control market found for %s via public-search (%d events)" % (chamber, len(j.get("events", []))))
+    h = get("https://clob.polymarket.com/prices-history", {"market": token, "interval": "max", "fidelity": 1440}, timeout=60).json()
+    byd = {}
+    for x in h.get("history", []):
+        byd[datetime.fromtimestamp(x["t"], tz=timezone.utc).strftime("%Y-%m-%d")] = round(float(x["p"]) * 100, 1)
+    out = sorted(byd.items())
+    if len(out) < 10:
+        raise ValueError("too little price history for %s: %d points" % (chamber, len(out)))
+    return out
 
 SOURCES = {
     "fred": src_fred, "treasury_debt": src_treasury_debt, "cdc_overdose": src_cdc_overdose,
@@ -443,8 +369,7 @@ SOURCES = {
     "epoch_releases": src_epoch_releases, "rtci_snapshot": src_rtci_snapshot,
     "eia_crude": src_eia_crude, "manual": src_manual, "owid": src_owid,
     "stooq": src_stooq, "gpr": src_gpr, "gscpi": src_gscpi,
-    "cbp_monthly": src_cbp_monthly, "votehub_approval": src_votehub_approval,
-    "polymarket": src_polymarket,
+    "votehub_approval": src_votehub_approval, "polymarket_dem": src_polymarket_dem,
 }
 
 # ---------------- transforms ----------------
@@ -878,22 +803,17 @@ CATALOG = {
                   series=[dict(name="GSCPI", src=["gscpi"])],
                   source_name="NY Fed", source_url="https://www.newyorkfed.org/research/policy/gscpi",
                   note="Supply-chain stress shows up here before it shows up in goods prices."),
-    # ---- v0.3 additions: border encounters, approval, election odds (2026-07-06) ----
-    "border_monthly": dict(sec="immigration", title="Border encounters, monthly", unit="count", fmt="num", dec=0, freq="m", rng="max", exp=120,
-                           series=[dict(name="Nationwide", src=["cbp_monthly", "all"]),
-                                   dict(name="Southwest land border", src=["cbp_monthly", "sw"])],
-                           source_name="CBP Nationwide Encounters dataset", source_url="https://www.cbp.gov/document/stats/nationwide-encounters",
-                           note="All CBP encounters: Border Patrol apprehensions plus port-of-entry inadmissibles (Title 8 and Title 42). Published on a ~45-day lag."),
+    # ---- politics feeds (2026-07-06) ----
     "approval": dict(sec="society", title="Presidential approval (poll average)", unit="%", fmt="pct", dec=1, freq="w", rng="max", exp=45,
-                     series=[dict(name="Approve", src=["votehub_approval", "Approve"]),
-                             dict(name="Disapprove", src=["votehub_approval", "Disapprove"])],
-                     source_name="VoteHub poll feed (average computed by this pipeline)", source_url="https://votehub.com/polls/",
-                     note="Unweighted mean of raw public polls whose field-date midpoint falls in a trailing 14-day window, stepped weekly; current term only."),
-    "midterm_odds": dict(sec="society", title="2026 midterms: Republican control odds (Polymarket)", unit="% probability", fmt="pct", dec=0, freq="d", rng="max", exp=21,
-                         series=[dict(name="GOP House control", src=["polymarket", "will-the-republican-party-control-the-house-after-the-2026-midterm-elections"]),
-                                 dict(name="GOP Senate control", src=["polymarket", "will-the-republican-party-control-the-senate-after-the-2026-midterm-elections"])],
+                     series=[dict(name="Approve", src=["votehub_approval", "approve"]),
+                             dict(name="Disapprove", src=["votehub_approval", "disapprove"])],
+                     source_name="VoteHub (all public polls)", source_url="https://votehub.com",
+                     note="Unweighted 14-day trailing mean of all public approval polls, stepped weekly."),
+    "midterm_odds": dict(sec="society", title="2026 midterms: Democratic control odds (Polymarket)", unit="%", fmt="pct", dec=0, freq="d", rng="max", exp=21,
+                         series=[dict(name="House", src=["polymarket_dem", "House"]),
+                                 dict(name="Senate", src=["polymarket_dem", "Senate"])],
                          source_name="Polymarket", source_url="https://polymarket.com/event/which-party-will-win-the-house-in-2026",
-                         note="Prediction-market prices for Republicans holding each chamber; the probability of Democratic control is roughly the complement."),
+                         note="Prediction-market prices: 60 = a 60% implied probability of Democratic control of that chamber."),
 }
 
 EXPECT_DAYS = {"d": 10, "w": 25, "m": 75, "q": 170, "a": 550, "snap": 75, "manual": None}
