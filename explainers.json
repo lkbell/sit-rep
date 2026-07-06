@@ -4,6 +4,56 @@
  "why": "It is forward-looking: prices embed investors' collective bets on future profits, interest rates, and risk. It moves before the economic data does — though it also false-alarms.",
  "noteworthy": "Weekly moves beyond ±5% signal real stress or euphoria. A drop of 20% from the peak is a bear market — there have been 12 since 1950, averaging about −33%."
 },
+"nasdaq": {
+ "what": "An index of the ~3,000 stocks listed on the Nasdaq exchange, heavily weighted toward technology.",
+ "why": "The cleanest read on tech-sector sentiment specifically — when it diverges from the S&P, the market is repricing tech, not the whole economy.",
+ "noteworthy": "It fell ~78% in the 2000–02 dot-com bust and took 15 years to reclaim the peak — the benchmark case for what a burst tech bubble looks like."
+},
+"vix": {
+ "what": "The market's expectation of S&P 500 volatility over the next 30 days, derived from option prices — the 'fear gauge.'",
+ "why": "It prices how much protection investors are buying; spikes mark moments when hedging demand overwhelms complacency.",
+ "noteworthy": "Below 15 is calm; above 30 is genuine fear; the closing-price records are ~80 (2008 and March 2020). It spends most of its life between 12 and 20."
+},
+"dollar": {
+ "what": "The Fed's broad index of the dollar against the currencies of all major U.S. trading partners, trade-weighted.",
+ "why": "A strong dollar tightens global financial conditions (much of world debt is dollar-denominated), cheapens imports, and squeezes U.S. exporters.",
+ "noteworthy": "Sustained moves of 10%+ in a year are big — 2022's surge to record highs strained emerging markets; sharp weakening usually accompanies expected Fed easing."
+},
+"gold": {
+ "what": "The dollar price of an ounce of gold, from the COMEX futures market.",
+ "why": "The classic hedge against currency debasement and geopolitical risk; central banks have been the marginal buyer of recent years.",
+ "noteworthy": "Gold roughly quadrupled from 2001–2011, went sideways for a decade, then broke out again from 2024 — sustained new highs often track deficits, real rates, and central-bank buying."
+},
+"btc": {
+ "what": "The dollar price of Bitcoin (Coinbase), on a log scale so each gridline is 10x the one below.",
+ "why": "Part risk asset, part monetary hedge — it tends to amplify liquidity conditions: soaring when money is loose, crashing hardest when it tightens.",
+ "noteworthy": "Four boom-bust cycles since 2013, each with drawdowns of 70–85%. The log-scale slope flattening across cycles is the maturation story; a broken cycle pattern would be news."
+},
+"fedfunds": {
+ "what": "The interest rate banks charge each other overnight — the rate the Federal Reserve directly sets to steer the economy.",
+ "why": "Every other borrowing cost keys off it. Hiking cycles slow the economy with a 12–18 month lag; cutting cycles historically begin shortly before or during recessions.",
+ "noteworthy": "Near-zero 2009–15 and 2020–22 were historic anomalies; the 2022–23 hiking cycle (+5pp in 16 months) was the fastest since 1980. Rapid cuts usually mean something broke."
+},
+"walcl": {
+ "what": "Total assets held by the Federal Reserve — the size of its balance sheet, mostly Treasuries and mortgage bonds.",
+ "why": "The physical footprint of quantitative easing and tightening: expansion injects liquidity into markets, runoff drains it.",
+ "noteworthy": "About $0.9T before 2008, ~$4.5T after three rounds of QE, ~$9T at the 2022 peak. Direction matters more than level — pivots from runoff back to expansion have marked every stress episode."
+},
+"m2_yoy": {
+ "what": "Year-over-year growth of M2 — cash, checking, savings, and money-market balances held by the public.",
+ "why": "The money supply. Rapid growth can foreshadow inflation with a long lag; contraction is rare and restrictive.",
+ "noteworthy": "The 2020–21 surge (+27% y/y, the fastest ever recorded) preceded the 2021–23 inflation wave; 2023's outright contraction was the first since the 1930s."
+},
+"sloos": {
+ "what": "The net share of senior bank loan officers telling the Fed they are tightening standards on business (C&I) loans.",
+ "why": "Banks choke off credit before the economy rolls over — this survey has led downturns by two to three quarters.",
+ "noteworthy": "Readings above +30–40% net tightening accompanied 1990, 2001, 2008, and 2020. Sustained positive territory while the economy still looks fine is the classic early warning."
+},
+"nfci": {
+ "what": "The Chicago Fed's weekly composite of 105 indicators of credit, leverage, and risk appetite. Zero = long-run average; positive = tighter than normal.",
+ "why": "One line summarizing whether the financial system is easy or stressed — it aggregates what spreads, funding markets, and volatility are all saying.",
+ "noteworthy": "It rarely crosses zero outside genuine stress: 2008 peaked near +3, COVID spiked to +0.7 in weeks. Persistent positive readings while markets look calm deserve attention."
+},
 "dgs10": {
  "what": "The yield the U.S. government pays to borrow for 10 years — the benchmark interest rate for the world.",
  "why": "It anchors mortgage and corporate borrowing costs, and it rises when markets expect more inflation or growth — or worry about absorbing more Treasury debt.",
@@ -24,35 +74,185 @@
  "why": "Layoffs appear here within days, months before they reach the unemployment rate.",
  "noteworthy": "Sub-250K is historically healthy. Direction beats level: a sustained climb of 15–20% off the recent low has accompanied every labor-market turn."
 },
+"ccsa": {
+ "what": "The number of Americans continuing to draw unemployment benefits week after week (continued claims).",
+ "why": "Initial claims measure layoffs; continued claims measure whether the laid-off are getting rehired. Rising continued claims with flat initial claims = a quietly freezing job market.",
+ "noteworthy": "A grind higher over months, even without a layoff spike, has preceded rising unemployment — the 'low fire, low hire' pattern."
+},
 "sahm": {
  "what": "How far the 3-month average unemployment rate has risen above its low from the past 12 months.",
  "why": "It converts slow-moving unemployment data into a recession trigger with a near-perfect historical record, designed to fire early in a downturn.",
  "noteworthy": "A reading of 0.50pp or more marked the start of every recession since 1970. The one modern caveat: it tripped in mid-2024 without a recession following — unusual labor-supply shifts can distort it."
+},
+"quits": {
+ "what": "The share of workers voluntarily quitting their jobs each month (JOLTS survey).",
+ "why": "People quit when they're confident they can do better — quits lead wages and payrolls. A falling quits rate signals cooling before layoffs begin.",
+ "noteworthy": "The 2021–22 'Great Resignation' peaked at 3.0%; readings near 2.0% or below mark a cautious, low-churn labor market like 2009–13."
+},
+"temphelp": {
+ "what": "Year-over-year change in temporary-help employment — staffing-agency workers.",
+ "why": "Temps are cut first in a slowdown and hired first in a recovery; this series turns before overall payrolls.",
+ "noteworthy": "Sustained negative territory preceded or accompanied every recession since 1991 — though it can also stay weak during structural shifts in staffing."
 },
 "cpi_yoy": {
  "what": "How much consumer prices rose versus a year ago; the core line strips out volatile food and energy.",
  "why": "This is THE inflation number — it sets real-wage math, Social Security adjustments, and Federal Reserve policy.",
  "noteworthy": "The Fed targets about 2% (on PCE, a related gauge that runs slightly cooler). Headline above 5% is rare outside the 1970s and 2021–23. Core is the trend; headline is the noise."
 },
+"ppi_yoy": {
+ "what": "Year-over-year change in the prices producers receive — wholesale inflation, one step upstream of consumer prices.",
+ "why": "Cost pressure shows up here before it reaches the checkout aisle; producers either absorb it (margins) or pass it on (CPI).",
+ "noteworthy": "PPI led CPI on the way up in 2021 (peaking over 11%) and on the way down in 2022–23. A PPI-CPI gap that persists usually closes via consumer prices."
+},
 "unrate": {
  "what": "The share of the labor force actively looking for work.",
  "why": "The headline gauge of labor-market health — slow to turn, but decisive when it does.",
  "noteworthy": "Below 4% is historically tight. Recessions typically add 2–5pp. It lags the cycle — watch 3+ month direction, not single prints (the Sahm chart converts this series into an early trigger)."
 },
-"deficit12": {
- "what": "The gap between federal spending and revenue over the trailing 12 months.",
- "why": "This is the pace of new borrowing — the flow that feeds the debt. Deficits this large outside war or recession are historically novel.",
- "noteworthy": "Roughly $900B (~3% of GDP) was the pre-2020 norm; a sustained ~$2T deficit at full employment is the current anomaly. Watch the trend through tax season (April) swings."
+"payems_chg": {
+ "what": "How many jobs the economy added or lost each month (nonfarm payrolls, first differences).",
+ "why": "The single most market-moving statistic in America — released the first Friday of each month.",
+ "noteworthy": "Roughly +80–100K/month keeps up with population growth; sustained prints below that mark stall speed. Revisions run large — trend beats any single bar."
+},
+"lfpr_prime": {
+ "what": "The share of 25–54 year-olds working or looking for work — participation without the retirement-wave distortion.",
+ "why": "The cleanest answer to 'are working-age Americans actually engaged in the economy?' Immune to the aging-population effects that muddy the headline rate.",
+ "noteworthy": "The all-time range is narrow: ~80–84%. Long slides (2000–2015) reflected structural detachment; the post-COVID recovery to ~83%+ was a genuine surprise."
+},
+"jtsjol": {
+ "what": "Total job openings employers report (JOLTS) — unfilled demand for labor.",
+ "why": "Openings falling while unemployment stays low is the 'soft landing' path; openings falling with unemployment rising is the hard one.",
+ "noteworthy": "Openings peaked near 12M in 2022 (2 per unemployed worker, an all-time record). The pre-COVID normal was ~7M; the ratio of openings to unemployed is the tightness gauge."
+},
+"gdp_growth": {
+ "what": "The quarterly growth rate of inflation-adjusted output, annualized.",
+ "why": "The official scoreboard of the economy — but heavily revised and two months stale by first release.",
+ "noteworthy": "Long-run trend is ~2%. Two consecutive negative quarters is the rule-of-thumb recession (not the official definition). Swings beyond ±4% outside recessions/rebounds are rare."
+},
+"wage_vs_cpi": {
+ "what": "Wage growth (average hourly earnings) plotted against inflation (CPI), both year-over-year.",
+ "why": "The gap between the lines is real purchasing power: wages above inflation = living standards rising; below = a pay cut in real terms.",
+ "noteworthy": "Inflation outran wages for most of 2021–23 — the core of that era's economic discontent — before the gap flipped positive again in late 2023."
+},
+"umcsent": {
+ "what": "The University of Michigan's monthly survey of how consumers feel about their finances and the economy.",
+ "why": "Sentiment drives spending, and spending is two-thirds of GDP. It also captures inflation's psychological bite better than most hard data.",
+ "noteworthy": "The 2022 reading of 50 was the survey's all-time low — below 2008 — driven by inflation. Readings above 90 marked the strong late-90s and 2019 economies. Partisan gaps are large; the average is what matters."
+},
+"retail_yoy": {
+ "what": "Year-over-year change in retail sales, adjusted for inflation — real volumes, not just higher prices.",
+ "why": "The consumer is the U.S. economy's engine; real retail shows whether households are actually buying more or just paying more.",
+ "noteworthy": "Nominal sales grew through 2022 while real sales shrank — the inflation illusion this chart exists to strip out. Sustained real declines accompany consumer recessions."
+},
+"indpro_yoy": {
+ "what": "Year-over-year change in the physical output of factories, mines, and utilities.",
+ "why": "Manufacturing is a small share of GDP now but still the most cyclical — industrial downturns lead broad ones more often than not.",
+ "noteworthy": "Sustained negative territory outside a recession has happened (2015–16, 2019) — 'industrial recessions' the services economy powered through. Deep negatives (-5%+) mean the real thing."
+},
+"t5yie": {
+ "what": "The inflation rate bond markets expect to average over the next five years, from the TIPS-Treasury spread.",
+ "why": "Expectations drive behavior: if markets stop believing in ~2% inflation, the Fed's job gets much harder and rates stay higher for longer.",
+ "noteworthy": "Anchored means 1.5–2.5%. The 2022 spike above 3.5% was the 'de-anchoring' scare; a drop below 1% (2008, 2020) signals deflation fear."
 },
 "debt": {
  "what": "Total federal debt outstanding, updated daily by the Treasury.",
  "why": "The accumulated stock the deficit flows into. Interest on it now rivals defense as a budget line, which feeds back into the deficit itself.",
  "noteworthy": "Gross debt crossed 100% of GDP around 2013 and kept going. Recent pace: roughly $1T added every five to six months."
 },
+"debt_gdp": {
+ "what": "Federal debt as a share of the economy — the standard measure of debt burden across time and countries.",
+ "why": "Debt only means something relative to the income that services it; this is the ratio fiscal sustainability debates are actually about.",
+ "noteworthy": "The WWII peak was ~119%; the post-2020 era sits in that territory permanently, in peacetime. Academic warning zones start around 90–100%, though rates matter as much as levels."
+},
+"deficit12": {
+ "what": "The gap between federal spending and revenue over the trailing 12 months.",
+ "why": "This is the pace of new borrowing — the flow that feeds the debt. Deficits this large outside war or recession are historically novel.",
+ "noteworthy": "Roughly $900B (~3% of GDP) was the pre-2020 norm; a sustained ~$2T deficit at full employment is the current anomaly. Watch the trend through tax season (April) swings."
+},
+"interest": {
+ "what": "What the federal government pays annually in interest on its debt (annualized quarterly rate).",
+ "why": "The compounding cost of past deficits — every dollar here is spent before Congress votes on anything. It crowds the rest of the budget.",
+ "noteworthy": "Interest costs roughly doubled from 2021 to 2025, passing $1T/year — exceeding the defense budget. The ratio to tax revenue (~20%) is the sustainability number to watch."
+},
+"cs_level": {
+ "what": "The Case-Shiller national index level — repeat-sales prices of the same homes, the gold standard (2-month lag).",
+ "why": "The long view of the biggest asset most families own; the level shows cumulative appreciation across decades.",
+ "noteworthy": "National prices roughly doubled 2012–2022 and did NOT give back the 2021–22 surge — unlike 2007–11, when the index fell 27% peak-to-trough."
+},
 "cs_yoy": {
  "what": "Year-over-year change in prices of the same homes selling twice (Case-Shiller repeat-sales method — the gold standard, published with a ~2-month lag).",
  "why": "Housing is most households' largest asset and purchase; price momentum drives wealth effects, affordability, and construction.",
  "noteworthy": "The long-run norm is about +3–5% a year. Above +10% is boom territory (2005, 2021). Sustained negative prints have one modern precedent: 2007–11."
+},
+"mspus": {
+ "what": "The median sale price of homes sold each quarter (Census/HUD).",
+ "why": "The sticker price a buyer actually faces — though it shifts with the mix of what's selling, not just appreciation.",
+ "noteworthy": "Crossed $400K for the first time in 2021. Mix effects can move it when Case-Shiller is flat — divergence between the two is itself information."
+},
+"mortgage30": {
+ "what": "The average rate on a 30-year fixed mortgage (Freddie Mac weekly survey).",
+ "why": "The single number that sets housing affordability — each +1pp cuts a buyer's budget roughly 10%. It also locks in owners ('golden handcuffs') and freezes inventory.",
+ "noteworthy": "The 2021 low of 2.65% was the lowest ever recorded; the 2023 peak near 8% was a 23-year high. The historical norm is 6–8%; 1981 hit 18%."
+},
+"houst": {
+ "what": "How many new housing units broke ground each month (annualized).",
+ "why": "Construction is the economy's most interest-rate-sensitive sector — housing starts lead recessions and recoveries.",
+ "noteworthy": "The 50-year range: ~2.3M at the 1972/2006 peaks, 478K at the 2009 trough. America has underbuilt relative to household formation since 2008 — the structural shortage behind high prices."
+},
+"permit": {
+ "what": "Building permits issued for new housing units — starts, one step earlier.",
+ "why": "Nobody pulls a permit they don't intend to use; this is the construction pipeline's leading edge.",
+ "noteworthy": "Permits rolling over ahead of starts has flagged every housing downturn; watch the gap between permits and starts for builder hesitation."
+},
+"msacsr": {
+ "what": "How many months it would take to sell every new home on the market at the current sales pace.",
+ "why": "The supply-demand balance for new construction: low = sellers' market, high = builders stuck with inventory.",
+ "noteworthy": "4–6 months is balanced. Above 8–9 (2008, briefly 2022) forces builder price cuts; below 4 (2020–21) means bidding wars."
+},
+"zhvi": {
+ "what": "Zillow's estimate of the typical U.S. home value, monthly and fresher than Case-Shiller.",
+ "why": "The timeliest broad home-price gauge — useful for catching turns a month or two before the official indexes confirm them.",
+ "noteworthy": "When ZHVI and Case-Shiller disagree on direction, ZHVI is usually early rather than wrong — but it is a model estimate, not recorded sales."
+},
+"zori": {
+ "what": "Zillow's index of asking rents across the U.S.",
+ "why": "Rent is the biggest single line in CPI (with a ~year lag from asking rents) and the housing cost renters actually face now.",
+ "noteworthy": "Asking rents jumped ~15% in 2021–22 — the pipeline that kept CPI shelter inflation hot into 2023–24. Flat-to-falling ZORI is the leading edge of shelter disinflation."
+},
+"delinq": {
+ "what": "The share of single-family mortgages at commercial banks that are past due.",
+ "why": "The canary for housing-driven financial stress — 2008's crisis was, at root, this line going vertical.",
+ "noteworthy": "Post-2015 norms are historically low (1.5–3%); the 2010 peak was ~11%. A sustained climb from the floor matters more than the level."
+},
+"inventory": {
+ "what": "Active for-sale listings nationwide (Realtor.com; series begins 2016).",
+ "why": "Inventory turns before prices do. Rising listings with slowing sales is how every housing correction announces itself.",
+ "noteworthy": "The 2022 trough (~350K listings) was the tightest market ever measured; pre-COVID normal was ~1.2M. Recovery toward normal supply is the precondition for a balanced market."
+},
+"wti": {
+ "what": "The benchmark price of U.S. crude oil (West Texas Intermediate).",
+ "why": "Oil is the economy's tax and geopolitics' thermometer — spikes hit consumers within weeks and have preceded most recessions since 1973.",
+ "noteworthy": "$60–80 is the modern comfort zone. Sustained moves above $100 (2008, 2011–14, 2022) strain consumers; a collapse below $40 signals demand collapse or supply war."
+},
+"gas": {
+ "what": "The average U.S. price of regular gasoline (EIA weekly).",
+ "why": "The most visible price in America — it shapes inflation psychology and consumer sentiment far beyond its budget share.",
+ "noteworthy": "The June 2022 record was $5.01; below $3 reads as cheap in the post-COVID era. It tracks oil with a few weeks' lag, plus refinery events."
+},
+"natgas": {
+ "what": "The benchmark U.S. natural gas price (Henry Hub).",
+ "why": "Sets electricity costs and heating bills, and — via LNG exports — links American prices to European and Asian crises.",
+ "noteworthy": "$2–4 is normal; the 2022 spike to $9+ reflected Europe's post-Ukraine scramble. U.S. prices stayed an order of magnitude below Europe's — the shale advantage."
+},
+"elec": {
+ "what": "The average residential electricity price (BLS, per kWh).",
+ "why": "The grid bill everyone pays — and increasingly the meeting point of AI datacenter demand, electrification, and generation constraints.",
+ "noteworthy": "Electricity inflation historically ran below CPI; it has outpaced it since 2021. Sustained acceleration here is the consumer-facing edge of the grid-demand story."
+},
+"crude_prod": {
+ "what": "How much crude oil the U.S. pumps per day (EIA weekly).",
+ "why": "The shale revolution made the U.S. the world's largest producer — this line is American energy leverage in one number.",
+ "noteworthy": "~5M bbl/day in 2008 to a record ~13.5M by 2024–25. Plateaus at record highs despite price signals suggest the shale growth era maturing."
 },
 "swb_fy": {
  "what": "Border Patrol apprehensions between ports of entry on the southwest border, per federal fiscal year (Oct–Sep).",
@@ -64,19 +264,89 @@
  "why": "The best-measured crime statistic (bodies get counted; lesser crimes go unreported at varying rates) — the cleanest proxy for violent-crime trends.",
  "noteworthy": "The 1980 peak hit 10.2; the 1990s decline cut it roughly in half. 2020 saw the largest one-year jump on record (~+29%), which fully reversed by 2024 (~5.0)."
 },
+"rtci_ytd": {
+ "what": "Year-to-date crime counts vs. the same period last year, from 300+ city police departments reporting in near-real-time (AH Datalytics sample).",
+ "why": "Official FBI numbers arrive a year late; this sample is the only way to see crime trends as they happen.",
+ "noteworthy": "It's provisional and city-skewed, but it correctly tracked the 2023–25 murder decline a year before official data confirmed it. Treat ±2–3% as noise; ±10%+ as a real trend."
+},
+"overdoses": {
+ "what": "Deaths from drug overdoses over each trailing 12 months (CDC provisional, ~6-month lag).",
+ "why": "The deadliest drug epidemic in U.S. history, driven since 2015 by illicit fentanyl — a public-health series with border, crime, and social dimensions.",
+ "noteworthy": "The 2023 peak was ~112K/year — more than car crashes and guns combined. The decline that began in 2024 (fastest drop ever recorded) is the trend to watch: durable or pause?"
+},
 "fertility": {
  "what": "The number of children the average woman would have over her lifetime at current birth rates.",
  "why": "Below ~2.1, population shrinks without immigration. Today's number sets school enrollment, workforce size, and entitlement solvency decades ahead.",
  "noteworthy": "The U.S. fell below replacement in 2008 and never recovered; 1.60 (2024) is the record low. Most developed peers are lower still — South Korea is under 0.8."
+},
+"life_exp": {
+ "what": "How long a newborn would live at current death rates — the summary statistic of national health.",
+ "why": "It compresses everything — disease, drugs, violence, health care — into one number, and the U.S. runs 4–6 years behind peer countries.",
+ "noteworthy": "COVID erased 2.4 years (78.8 → 76.4), the largest drop since WWII; recovery to 79.0 by 2024 finally passed the 2019 level. The stagnation from 2010–2019 (drugs, obesity) was itself historically unusual."
+},
+"marriage": {
+ "what": "Marriages per 1,000 population per year (CDC).",
+ "why": "Family formation upstream of fertility, household economics, and much social policy — a slow variable that moves everything else.",
+ "noteworthy": "From 10.6 (1980) to ~6 today — a 40% decline. The 2020 COVID trough (5.1) mostly rebounded; the long slide did not."
 },
 "trust_media": {
  "what": "The share of Americans telling Gallup they have a great deal or fair amount of trust in mass media to report the news fully, accurately, and fairly.",
  "why": "A proxy for whether the country still has a shared factual baseline — and for the audience migration to alternative information sources.",
  "noteworthy": "Trust peaked at 72% in 1976 (post-Watergate) and hit 28% in 2025. The decline spans all groups but is deepest among Republicans (8%) and independents (27%)."
 },
+"church": {
+ "what": "The share of Americans belonging to a church, synagogue, or mosque (Gallup; last major reading 2020).",
+ "why": "Religious affiliation anchors community, charity, and social capital — its decline is one of the largest quiet shifts in American life.",
+ "noteworthy": "Stable near 70% for six decades, then a 20-point fall in 20 years to 47% by 2020 — the first minority reading in Gallup's 80-year series."
+},
+"approval": {
+ "what": "The president's approval and disapproval ratings — an unweighted 14-day trailing average of all public polls (VoteHub).",
+ "why": "The daily scoreboard of political capital: it shapes what a president can pass, how parties behave, and midterm outcomes.",
+ "noteworthy": "Modern presidents rarely sustain approval above 55% or below 37%. Net approval around −20 historically precedes midterm losses for the president's party; watch the trend, not any single week."
+},
+"midterm_odds": {
+ "what": "Prediction-market prices for Democratic control of the House and Senate after the November 2026 midterms (Polymarket).",
+ "why": "Real-money odds aggregate polls, fundamentals, and news faster than any single forecaster — the closest thing to a live consensus forecast.",
+ "noteworthy": "Prices are probabilities, not predictions: 80 means 4-in-5 — the 20 happens. Sharp moves without news suggest big-money positioning; the 2026 series will converge toward 0 or 100 by election night."
+},
 "ai_compute": {
  "what": "The computing power (FLOP) used to train each notable AI model — one dot per model, on a log scale where each gridline is 10x the one below.",
  "why": "Training compute has been the strongest single predictor of AI capability. The slope of the top edge IS the pace of the AI race.",
  "noteworthy": "Frontier training compute has grown roughly 4–5x per year since 2010 — about 10,000x per decade. A flattening of the top edge would signal a genuine regime change in AI progress."
+},
+"ai_releases": {
+ "what": "How many notable AI models were released each quarter (Epoch AI's curated list).",
+ "why": "The cadence of the AI race — acceleration means more labs at the frontier; deceleration could mean consolidation or hitting limits.",
+ "noteworthy": "From a handful per quarter in the 2010s to dozens post-2023. A sustained drop while compute keeps scaling would suggest consolidation into fewer, bigger models."
+},
+"sox": {
+ "what": "The Philadelphia Semiconductor Index — the 30 leading chip companies.",
+ "why": "Chips are the substrate of the AI buildout and the economy's most cyclical tech sector; the SOX prices both the AI boom and its financing conditions.",
+ "noteworthy": "It fell ~85% in 2000–02 — the case study for infrastructure-boom repricing. Sharp SOX underperformance vs. the Nasdaq is an early crack signal for the AI trade."
+},
+"datacenter": {
+ "what": "Monthly U.S. spending on data-center construction (Census, via Our World in Data).",
+ "why": "The physical footprint of the AI investment boom — concrete and power, not press releases. Capex commitments show conviction better than announcements.",
+ "noteworthy": "Spending roughly tripled from 2022 to 2025 (past $2B/month). A rollover here would be the first hard evidence of the AI buildout cooling."
+},
+"usdcny": {
+ "what": "How many Chinese yuan one dollar buys.",
+ "why": "The managed exchange rate at the center of U.S.-China economic competition — Beijing weakens it to support exports, defends it to prevent capital flight.",
+ "noteworthy": "7.0 was the psychological line Beijing defended for years; sustained moves past 7.3 signal either deliberate devaluation or capital pressure. Sharp strengthening accompanies détente or dollar weakness."
+},
+"china_trade": {
+ "what": "Monthly U.S. goods imports from and exports to China.",
+ "why": "The decoupling scoreboard: tariffs, re-shoring, and trans-shipment all show up here before they show up in speeches.",
+ "noteworthy": "Imports peaked near $50B/month in 2022; the decline since is the real measure of decoupling — though some trade re-routes through Vietnam and Mexico rather than disappearing."
+},
+"gpr": {
+ "what": "The Geopolitical Risk index — counting war- and tension-related coverage across major newspapers since 1985 (Caldara-Iacoviello).",
+ "why": "A quantified read on how close the world is to conflict — spikes precede oil shocks, defense buildups, and risk-off markets.",
+ "noteworthy": "9/11 and the Iraq invasion set the records (300+); Ukraine 2022 hit ~180. A sustained level shift — not just spikes — marks a genuinely more dangerous world."
+},
+"gscpi": {
+ "what": "The NY Fed's global supply chain pressure index — shipping costs and delivery times worldwide, in standard deviations from normal.",
+ "why": "Supply-chain stress shows up here months before it reaches goods prices — it explained much of the 2021–22 inflation surge.",
+ "noteworthy": "The 2021 peak (+4.3σ) was the most stressed reading ever constructed; negative values mean looser-than-normal chains. A renewed spike would be an early inflation warning."
 }
 }
