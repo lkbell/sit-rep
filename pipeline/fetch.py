@@ -18,6 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
 MANUAL = os.path.join(ROOT, "pipeline", "manual")
 UA = {"User-Agent": "Mozilla/5.0 (GroundTruth dashboard; github.com/lkbell/sit-rep)"}
+SIGNALS_ENABLED = True  # kill switch: set False and push to remove signals from the site entirely
 
 def get(url, params=None, timeout=60):
     r = requests.get(url, params=params, headers=UA, timeout=timeout)
@@ -389,6 +390,74 @@ def thin(pts):
                 seen.add(k); out.append((d, v))
     return out
 
+def _sig_series(cid):
+    try:
+        with open(os.path.join(DATA, cid + ".json")) as f:
+            s = json.load(f)["series"][0]
+        return s["t"], s["v"]
+    except Exception:
+        return [], []
+
+def _sig_since(t, v, cond):
+    since = None
+    for i in range(len(v) - 1, -1, -1):
+        if v[i] is not None and cond(v[i]):
+            since = t[i]
+        else:
+            break
+    return since
+
+def compute_signals():
+    """Seven calibrated early-warning rules over the just-written data files.
+    Thresholds chosen for low false-alarm rates; see MAINTENANCE.md before tuning."""
+    sigs = []
+    def add(sid, label, tripped, detail, since=None):
+        sigs.append({"id": sid, "label": label, "tripped": bool(tripped), "detail": detail, "since": since})
+    t, v = _sig_series("sahm")
+    if v:
+        add("sahm", "Sahm rule ≥ 0.50", v[-1] >= 0.5,
+            "latest %.2fpp (trigger 0.50); has marked every recession start since 1970" % v[-1],
+            _sig_since(t, v, lambda x: x >= 0.5))
+    t, v = _sig_series("t10y2y")
+    if v:
+        cross = None
+        last = datetime.strptime(t[-1], "%Y-%m-%d")
+        for i in range(len(v) - 1, 0, -1):
+            if (last - datetime.strptime(t[i], "%Y-%m-%d")).days > 60:
+                break
+            if v[i] is not None and v[i - 1] is not None and (v[i] > 0) != (v[i - 1] > 0):
+                cross = t[i]
+                break
+        add("curve", "Yield curve crossed zero (past 60 days)", cross is not None,
+            "latest %+.2fpp%s" % (v[-1], ("; crossed " + cross) if cross else ""), cross)
+    t, v = _sig_series("hy_oas")
+    if v:
+        add("hy", "High-yield spread above 5pp", v[-1] > 5.0,
+            "latest %.2fpp (calm <3, stress >5, crisis >8)" % v[-1], _sig_since(t, v, lambda x: x > 5.0))
+    t, v = _sig_series("icsa")
+    if v:
+        lo = min([x for x in v[-26:] if x is not None] or [0])
+        add("claims", "Jobless claims 15%+ off 26-week low", lo and v[-1] >= lo * 1.15,
+            "4-wk avg %dK vs 26-wk low %dK (%+.0f%%)" % (v[-1], lo, (v[-1] / lo - 1) * 100 if lo else 0), None)
+    t, v = _sig_series("nfci")
+    if v:
+        add("nfci", "Financial conditions tighter than average", v[-1] > 0,
+            "NFCI %+.2f (0 = long-run average)" % v[-1], _sig_since(t, v, lambda x: x > 0))
+    t, v = _sig_series("cpi_yoy")
+    if v:
+        add("cpi", "Inflation breakout (≥4% or ≤0%)", v[-1] >= 4.0 or v[-1] <= 0.0,
+            "headline %.1f%% y/y" % v[-1], None)
+    t, v = _sig_series("gpr")
+    if v:
+        base = [x for x in v[-60:] if x is not None]
+        avg = sum(base) / len(base) if base else 0
+        add("gpr", "Geopolitical risk 2x its 5-year average", bool(avg) and v[-1] >= 2 * avg,
+            "GPR %.0f vs 5-yr avg %.0f" % (v[-1], avg), None)
+    return {"enabled": True,
+            "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+            "tripped": sum(1 for s in sigs if s["tripped"]),
+            "signals": sigs}
+
 # ---------------- catalog ----------------
 # chart: title, unit(label), fmt(pct|usd|num|sci), dec, freq(d/w/m/q/a/manual/snap),
 #        kind(line|scatter|bars), log, rng(default years or 'max'), exp(days override),
@@ -757,6 +826,14 @@ def main():
                     "expect_days": EXPECT_DAYS}
     with open(os.path.join(DATA, "catalog.json"), "w") as f:
         json.dump(site_catalog, f, separators=(",", ":"))
+    if SIGNALS_ENABLED:
+        try:
+            sig = compute_signals()
+            with open(os.path.join(DATA, "signals.json"), "w") as f:
+                json.dump(sig, f, separators=(",", ":"))
+            print("signals: %d/%d tripped" % (sig["tripped"], len(sig["signals"])))
+        except Exception as e:
+            print("signals computation failed (non-fatal): %s" % e)
     with open(mpath, "w") as f:
         json.dump({"generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                    "charts": manifest}, f, indent=1)

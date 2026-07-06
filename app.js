@@ -1,7 +1,7 @@
 /* Sit-Rep front-end. Vanilla JS + uPlot. Hash-routed pages: #/ (overview), #/<section>. */
 (function () {
   "use strict";
-  var CAT = null, MAN = null, EXP = {}, charts = {}, PAYLOADS = {}, io = null;
+  var CAT = null, MAN = null, EXP = {}, SIG = null, charts = {}, PAYLOADS = {}, io = null;
 
   /* theme */
   var pref = localStorage.getItem("gt-theme") ||
@@ -272,6 +272,32 @@
     return h && CAT.sections.some(function (s) { return s.id === h; }) ? h : "overview";
   }
 
+  function buildSigbar() {
+    if (!SIG || !SIG.enabled || !SIG.signals || localStorage.getItem("gt-signals") === "off") return null;
+    var hot = SIG.signals.filter(function (s) { return s.tripped; });
+    var bar = document.createElement("div");
+    bar.className = "sigbar" + (hot.length ? " hot" : "");
+    var summary = hot.length
+      ? "⚠ " + hot.length + " of " + SIG.signals.length + " signals tripped — " + hot.map(function (s) { return s.label; }).join(" · ")
+      : "Signals: none of " + SIG.signals.length + " tripped";
+    bar.innerHTML = '<span class="sigsum">' + summary + '</span><span class="sighint">details</span>' +
+      '<button class="sigx" title="Hide signals permanently">×</button>' +
+      '<div class="sigdetail" hidden>' + SIG.signals.map(function (s) {
+        return '<div class="sigrow' + (s.tripped ? " on" : "") + '"><span>' + (s.tripped ? "⚠" : "✓") + "</span><b>" + s.label + "</b><span>" +
+          s.detail + (s.since ? " · since " + s.since : "") + "</span></div>";
+      }).join("") + '<div class="sigrow"><span></span><b></b><span>Checked every data refresh · thresholds documented in the repo’s MAINTENANCE.md</span></div></div>';
+    bar.querySelector(".sigx").onclick = function (e) {
+      e.stopPropagation();
+      localStorage.setItem("gt-signals", "off");
+      bar.remove();
+    };
+    bar.onclick = function () {
+      var d = bar.querySelector(".sigdetail");
+      d.hidden = !d.hidden;
+    };
+    return bar;
+  }
+
   function renderPage() {
     Object.keys(charts).forEach(function (id) { if (charts[id].u) charts[id].u.destroy(); });
     charts = {};
@@ -287,6 +313,8 @@
     if (pid === "overview") {
       wrap.innerHTML = '<div class="pagehead"><h2>Overview</h2>' +
         '<p>The vital signs — the most important series from every domain. Open a domain page for the full picture.</p></div>';
+      var sb = buildSigbar();
+      if (sb) wrap.appendChild(sb);
       ids = CAT.overview || [];
     } else {
       var sec = CAT.sections.filter(function (s) { return s.id === pid; })[0];
@@ -323,9 +351,10 @@
   Promise.all([
     fetch("data/catalog.json").then(function (r) { return r.json(); }),
     fetch("data/manifest.json").then(function (r) { return r.json(); }).catch(function () { return { charts: {} }; }),
-    fetch("explainers.json").then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+    fetch("explainers.json").then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }),
+    fetch("data/signals.json").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
   ]).then(function (res) {
-    CAT = res[0]; MAN = res[1]; EXP = res[2] || {};
+    CAT = res[0]; MAN = res[1]; EXP = res[2] || {}; SIG = res[3];
     document.getElementById("updated").textContent = MAN.generated_at ? "data as of " + MAN.generated_at : "";
     var nFail = Object.keys(MAN.charts || {}).filter(function (k) {
       return (MAN.charts[k] || {}).status === "failed";

@@ -19,8 +19,8 @@ a:hover { text-decoration: underline; }
 
 #hdr { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line); }
 .hdr-inner { max-width: 1500px; margin: 0 auto; padding: 16px 24px 8px; display: flex; justify-content: space-between; align-items: flex-start; }
-h1 { margin: 0; font-size: 19px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; }
-h1 .gt { color: var(--accent); }
+h1.logo { margin: 0; font-size: 27px; letter-spacing: .12em; font-weight: 900; color: #d7261e; line-height: 1; }
+[data-theme="dark"] h1.logo { color: #ff4136; }
 .tagline { margin: 3px 0 0; color: var(--muted); font-size: 12.5px; }
 .hdr-right { display: flex; gap: 12px; align-items: center; color: var(--muted); font-size: 12px; }
 #themeBtn { background: none; border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
@@ -81,3 +81,16 @@ footer p { max-width: 1500px; margin: 0 auto; padding: 14px 24px 32px; line-heig
 .explain { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 4px; }
 .explain p { font-size: 12.5px; color: var(--muted); line-height: 1.55; margin: 6px 0; }
 .explain .xl { color: var(--ink); font-weight: 600; }
+
+.sigbar { border: 1px solid var(--line); border-radius: 10px; background: var(--card); padding: 9px 14px;
+  margin: 0 0 16px; font-size: 13px; color: var(--muted); cursor: pointer; display: flex; align-items: center;
+  gap: 10px; flex-wrap: wrap; box-shadow: var(--shadow); }
+.sigbar.hot { border-color: var(--failed); }
+.sigbar.hot .sigsum { color: var(--failed); font-weight: 600; }
+.sighint { font-size: 11.5px; border: 1px solid var(--line); border-radius: 10px; padding: 1px 8px; }
+.sigx { margin-left: auto; background: none; border: none; color: var(--muted); font-size: 15px; cursor: pointer; padding: 0 2px; }
+.sigx:hover { color: var(--failed); }
+.sigdetail { width: 100%; border-top: 1px solid var(--line); margin-top: 8px; padding-top: 6px; cursor: default; }
+.sigrow { display: grid; grid-template-columns: 18px 300px 1fr; gap: 8px; padding: 3px 0; font-size: 12.5px; }
+.sigrow.on { color: var(--failed); }
+.sigrow.on b { color: var(--failed); }
