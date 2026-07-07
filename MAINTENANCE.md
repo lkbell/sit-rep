@@ -9,7 +9,7 @@ Live site: **https://lkbell.github.io/sit-rep/** — 71 indicator charts, 10 dom
 ## Architecture (6 files matter)
 
 - `pipeline/fetch.py` — everything data: the CATALOG dict (one entry per chart: source, transform, unit, freshness window `exp`, note) + per-source adapters + transforms + the SIGNALS rules (`compute_signals`). Emits `data/<id>.json` per chart, `data/catalog.json` (drives the site), `data/manifest.json` (per-chart status/freshness), `data/signals.json` (early-warning rules).
-- `app.js` — renders catalog+data with uPlot; hash routing (`#/` Overview, `#/<section>`); freshness dots; explainer toggles; the Overview signals bar.
+- `app.js` — renders catalog+data with uPlot; hash routing (`#/` Overview, `#/<section>`); freshness dots; explainer toggles; the Overview signals bar. Hover tooltip: `tooltipPlugin` (in app.js) is added to every chart's uPlot `opts.plugins` in `redraw()` — on hover it shows the date + value(s) at the cursor point, with a highlighted point and a vertical crosshair (`cursor.y` off); multi-series charts show one colored row per series. Styled by the `.u-tt*` rules in style.css. Bar charts (crime) are separate DOM (`renderBars`) and already print their values.
 - `explainers.json` — static "What it measures / Why it matters / What noteworthy looks like" text, ALL 71 chart ids. The ⓘ button appears automatically for any chart id present here.
 - `style.css`, `index.html` — presentation shell (the SITREP wordmark lives here: `h1.logo`, red #d7261e / dark #ff4136).
 - `.github/workflows/refresh.yml` — cron + on-push refresh; commits refreshed `data/` back to main.
@@ -21,7 +21,7 @@ Seven calibrated early-warning rules computed by `compute_signals()` in fetch.py
 
 ## Routine operations
 
-**Add an indicator:** one CATALOG entry in `pipeline/fetch.py` (+ a JSON in `pipeline/manual/` if curated; + an `explainers.json` entry — match the house style: three short fields, historical anchors instead of adjectives, reversal-tested wording). Push to main → workflow re-runs → site picks it up.
+**Add an indicator:** one CATALOG entry in `pipeline/fetch.py` (+ a JSON in `pipeline/manual/` if curated; + an `explainers.json` entry — match the house style: three short fields, historical anchors instead of adjectives, reversal-tested). Push to main → workflow re-runs → site picks it up.
 
 **Fix a broken feed:** `data/manifest.json` tells you what and why — adapters raise descriptive errors, and the GSCPI adapter dumps the file's actual sheet/row layout into its error message. Fix the one adapter, push, watch the next run. Known source quirks:
 - FRED (`fredgraph.csv`, no key): the workhorse. Missing values are `.`; header row varies.
@@ -48,6 +48,6 @@ The connector CANNOT: create repos, push `.github/workflows/*` files, or reach r
 
 ## Standing backlog (rough priority)
 
-Monthly border-encounters feed — the one intended feed not shipped: CBP/OHSS publish monthly data only behind JS-rendered dashboards; the route is to load the CBP nationwide-encounters dashboard in the connected Chrome and use network inspection to find the underlying JSON API, then build an adapter · percentile-vs-history markers per card · "changed since last visit" view · AI-scatter hover labels (model names already ship in `ai_compute.json`) · affordability ratio · WSTS semiconductor sales · living religiosity series · mobile/PWA polish · generic ballot average (VoteHub has poll_type variants worth probing).
+Monthly border-encounters feed — the one intended feed not shipped: CBP/OHSS publish monthly data only behind JS-rendered dashboards; the route is to load the CBP nationwide-encounters dashboard in the connected Chrome and use network inspection to find the underlying JSON API, then build an adapter · percentile-vs-history markers per card · "changed since last visit" view · AI-scatter model-name hover labels — the generic date+value hover tooltip now ships site-wide (2026-07-07); the remaining nicety is surfacing each point's model NAME on the AI scatter (names already ship in `ai_compute.json`) · affordability ratio · WSTS semiconductor sales · living religiosity series · mobile/PWA polish · generic ballot average (VoteHub has poll_type variants worth probing).
 
-Built 2026-07-03–06 by Claude (Fable) for Landon Bell; maintained by whichever Claude is on duty.
+Built 2026-07-03–06 by Claude (Fable) for Landon Bell; hover-tooltip-on-all-charts added 2026-07-07 (Opus); maintained by whichever Claude is on duty.
