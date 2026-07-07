@@ -42,6 +42,63 @@
     return " " + (cfg.unit || "");
   }
 
+  var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function fmtDate(sec) {
+    var d = new Date(sec * 1000);
+    return MON[d.getUTCMonth()] + " " + d.getUTCDate() + ", " + d.getUTCFullYear();
+  }
+
+  /* Apple-stock-style hover tooltip: shows the date + value(s) at the cursor point. */
+  function tooltipPlugin(cfg, names, colors) {
+    var tt, over;
+    function hide() { if (tt) tt.style.display = "none"; }
+    return {
+      hooks: {
+        init: function (u) {
+          over = u.over;
+          tt = document.createElement("div");
+          tt.className = "u-tt";
+          tt.style.display = "none";
+          over.appendChild(tt);
+          over.addEventListener("mouseleave", hide);
+        },
+        setCursor: function (u) {
+          var idx = u.cursor.idx;
+          if (idx == null || u.cursor.left == null || u.cursor.left < 0) { hide(); return; }
+          var xv = u.data[0][idx];
+          if (xv == null) { hide(); return; }
+          var single = names.length === 1;
+          var html = '<div class="u-tt-date">' + fmtDate(xv) + '</div>';
+          var shown = 0;
+          for (var si = 1; si < u.data.length; si++) {
+            var yv = u.data[si][idx];
+            if (yv == null || isNaN(yv)) continue;
+            var vs = fmtVal(yv, cfg) + unitSuffix(cfg);
+            if (single) {
+              html += '<div class="u-tt-val">' + vs + '</div>';
+            } else {
+              html += '<div class="u-tt-row"><span class="u-tt-dot" style="background:' + colors[si - 1] +
+                '"></span><span class="u-tt-nm">' + names[si - 1] + '</span><span class="u-tt-v">' + vs + '</span></div>';
+            }
+            shown++;
+          }
+          if (!shown) { hide(); return; }
+          tt.innerHTML = html;
+          tt.style.display = "block";
+          var pw = over.clientWidth, ph = over.clientHeight;
+          var tw = tt.offsetWidth, th = tt.offsetHeight;
+          var lft = u.cursor.left + 14;
+          if (lft + tw > pw) lft = u.cursor.left - tw - 14;
+          if (lft < 0) lft = Math.max(0, Math.min(u.cursor.left - tw / 2, pw - tw));
+          var top = u.cursor.top - th - 12;
+          if (top < 0) top = u.cursor.top + 16;
+          if (top + th > ph) top = Math.max(0, ph - th);
+          tt.style.transform = "translate(" + Math.round(lft) + "px," + Math.round(top) + "px)";
+        }
+      }
+    };
+  }
+
   function freshClass(cid) {
     var m = (MAN.charts || {})[cid] || {};
     var cfg = CAT.charts[cid] || {};
@@ -208,7 +265,8 @@
       width: w, height: 224,
       series: series, scales: scales, axes: axes,
       legend: { show: data.length > 2 },
-      cursor: { points: { size: 5 } },
+      cursor: { y: false, points: { size: 5 } },
+      plugins: [tooltipPlugin(cfg, c.names, colors)],
       padding: [8, 8, 0, 0]
     };
     if (cfg.zero_line) {
