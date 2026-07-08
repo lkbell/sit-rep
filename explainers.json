@@ -259,6 +259,11 @@
  "why": "The longest-running consistent gauge of illegal-crossing volume — monthly numbers make headlines, but this series shows the regime shifts.",
  "noteworthy": "The 1986 and 2000 waves peaked near 1.6M. The 2017 modern low was 304K. FY2021–23 set all-time records above 2M. FY2025 came in at 238K — the lowest since 1970."
 },
+"border_monthly": {
+ "what": "All CBP encounters each month — nationwide and for the Southwest land border specifically. Counts Border Patrol apprehensions between ports of entry plus Office of Field Operations inadmissibles at ports (Title 8), and Title 42 expulsions through May 2023, across every demographic and nationality.",
+ "why": "Monthly cadence exposes turning points an annual total hides — policy changes, seasonal patterns, and surges or drops register here first. The nationwide-versus-Southwest split shows how much of the flow is at the SW border versus everywhere else.",
+ "noteworthy": "Nationwide monthly encounters peaked near 362K in December 2023, an all-time high, with the Southwest land border the large majority of it. Both fell steeply through 2024–25 to monthly lows around 23K nationwide by mid-2025 — levels not seen in over a decade — running near 30K into 2026."
+},
 "murder_rate": {
  "what": "Homicides per 100,000 people, from FBI annual national estimates.",
  "why": "The best-measured crime statistic (bodies get counted; lesser crimes go unreported at varying rates) — the cleanest proxy for violent-crime trends.",
