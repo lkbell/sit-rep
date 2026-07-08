@@ -818,6 +818,85 @@ CATALOG = {
 
 EXPECT_DAYS = {"d": 10, "w": 25, "m": 75, "q": 170, "a": 550, "snap": 75, "manual": None}
 
+# ---------------- monthly border encounters (CBP Public Data Portal, 2026-07-08) ----------------
+# Backlog item #1: the one intended feed that wasn't shipped. CBP's dashboards are
+# JS-rendered (Tableau), but the Public Data Portal publishes the same underlying data
+# as plain CSVs. We self-discover the Nationwide Encounters "-aor" files (rolling FY23-FY26
+# monthly file + the FY20/FY21/FY22 archives), merge them (newer revisions win), and sum
+# to monthly totals. The independent "-aor" and "-state" breakdowns agree to the unit on
+# the nationwide total, so this reproduces CBP's published figures. region: 'all' -> whole
+# nation; 'sw' -> Southwest land border only.
+
+_CBP_NW_CACHE = {}
+
+def _cbp_nw_series():
+    if "nat" in _CBP_NW_CACHE:
+        return _CBP_NW_CACHE["nat"], _CBP_NW_CACHE["sw"]
+    page = get("https://www.cbp.gov/document/stats/nationwide-encounters", timeout=120).text
+    paths = _re.findall(r"/sites/default/files/[^\"'>\s]*?nationwide-encounters-fy\d{2}-fy\d{2}[^\"'>\s]*?-aor\.csv", page)
+    if not paths:
+        raise ValueError("no nationwide-encounters -aor CSVs found on CBP page")
+    best = {}   # fiscal-year range -> (folder, path); keep newest folder per range (rolling file)
+    for pth in set(paths):
+        m = _re.search(r"/files/([^/]+)/nationwide-encounters-fy(\d{2})-fy(\d{2})", pth)
+        if not m:
+            continue
+        folder, rng = m.group(1), (m.group(2), m.group(3))
+        if rng not in best or folder > best[rng][0]:
+            best[rng] = (folder, pth)
+    months = {"OCT": 10, "NOV": 11, "DEC": 12, "JAN": 1, "FEB": 2, "MAR": 3,
+              "APR": 4, "MAY": 5, "JUN": 6, "JUL": 7, "AUG": 8, "SEP": 9}
+    nat, sw = {}, {}
+    for rng in sorted(best):                     # oldest range first; newer overwrites overlaps
+        url = "https://www.cbp.gov" + best[rng][1]
+        rows = list(csv.reader(io.StringIO(get(url, timeout=120).text)))
+        if not rows:
+            continue
+        hdr = [h.strip().lower() for h in rows[0]]
+        try:
+            iFY = hdr.index("fiscal year"); iM = hdr.index("month (abbv)")
+            iR = hdr.index("land border region"); iC = hdr.index("encounter count")
+        except ValueError:
+            raise ValueError("unexpected nationwide CSV header: %s" % hdr)
+        cur_nat, cur_sw = {}, {}
+        for r in rows[1:]:
+            if len(r) <= iC:
+                continue
+            fym = _re.match(r"\s*(\d{4})", r[iFY] or "")   # current FY is labeled e.g. "2026 (FYTD)"
+            mm = months.get((r[iM] or "").strip().upper())
+            try:
+                c = int(float(r[iC]))
+            except (ValueError, TypeError):
+                continue
+            if not fym or not mm:
+                continue
+            fy = int(fym.group(1))
+            cy = fy - 1 if mm >= 10 else fy       # fiscal Oct-Dec fall in the prior calendar year
+            key = "%04d-%02d-01" % (cy, mm)
+            cur_nat[key] = cur_nat.get(key, 0) + c
+            if (r[iR] or "").strip() == "Southwest Land Border":
+                cur_sw[key] = cur_sw.get(key, 0) + c
+        nat.update(cur_nat)
+        sw.update(cur_sw)
+    if len(nat) < 24:
+        raise ValueError("too few nationwide months parsed: %d" % len(nat))
+    _CBP_NW_CACHE["nat"], _CBP_NW_CACHE["sw"] = nat, sw
+    return nat, sw
+
+def src_cbp_monthly(region):
+    """Monthly CBP encounters, self-discovered from the Nationwide Encounters dataset
+    on CBP's Public Data Portal. region='all' -> nationwide total; region='sw' ->
+    Southwest land border only. Keyless; archives + rolling file merged, newer wins."""
+    nat, sw = _cbp_nw_series()
+    return sorted((sw if region == "sw" else nat).items())
+
+SOURCES["cbp_monthly"] = src_cbp_monthly
+CATALOG["border_monthly"] = dict(sec="immigration", title="Border encounters by month (nationwide vs. Southwest)", unit="encounters", fmt="num", dec=0, freq="m", rng="max", exp=100,
+                                 series=[dict(name="Nationwide", src=["cbp_monthly", "all"]),
+                                         dict(name="Southwest land border", src=["cbp_monthly", "sw"])],
+                                 source_name="CBP Public Data Portal (Nationwide Encounters)", source_url="https://www.cbp.gov/document/stats/nationwide-encounters",
+                                 note="All CBP encounters per month — USBP Title 8 apprehensions + OFO Title 8 inadmissibles + Title 42 expulsions (the latter through May 2023) — from CBP's published Nationwide Encounters dataset, summed across demographics, citizenship and authority. Nationwide covers every sector and port; Southwest is the Southwest-land-border subset. Auto-discovers the newest monthly file and merges the FY archives back to FY2020; CBP posts on a roughly 4-6 week lag.")
+
 # ---------------- engine ----------------
 
 def build_chart(cid, cfg):
