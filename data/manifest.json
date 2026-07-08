@@ -1,360 +1,367 @@
 {
- "generated_at": "2026-07-08 16:13 UTC",
+ "generated_at": "2026-07-08 23:16 UTC",
  "charts": {
   "sp500": {
    "status": "ok",
    "last_obs": "2026-07-08",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "nasdaq": {
    "status": "ok",
    "last_obs": "2026-07-07",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "dgs10": {
    "status": "ok",
-   "last_obs": "2026-07-06",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "last_obs": "2026-07-07",
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "t10y2y": {
    "status": "ok",
-   "last_obs": "2026-07-07",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "last_obs": "2026-07-08",
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "hy_oas": {
    "status": "ok",
    "last_obs": "2026-07-07",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "vix": {
    "status": "ok",
    "last_obs": "2026-07-07",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "dollar": {
    "status": "ok",
    "last_obs": "2026-07-02",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "gold": {
    "status": "ok",
    "last_obs": "2026-07-08",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "btc": {
    "status": "ok",
    "last_obs": "2026-07-07",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "fedfunds": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "walcl": {
    "status": "ok",
    "last_obs": "2026-07-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "m2_yoy": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "cpi_yoy": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "unrate": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "payems_chg": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "lfpr_prime": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "jtsjol": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "icsa": {
    "status": "ok",
    "last_obs": "2026-06-27",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "gdp_growth": {
    "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "wage_vs_cpi": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "umcsent": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:14 UTC"
   },
   "retail_yoy": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:15 UTC"
   },
   "indpro_yoy": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:15 UTC"
   },
   "t5yie": {
    "status": "ok",
-   "last_obs": "2026-07-07",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "last_obs": "2026-07-08",
+   "fetched_at": "2026-07-08 23:15 UTC"
   },
   "debt": {
-   "status": "ok",
+   "status": "failed",
+   "error": "ReadTimeout: HTTPSConnectionPool(host='api.fiscaldata.treasury.gov', port=443): Read timed out. (read timeout=60)",
    "last_obs": "2026-07-06",
    "fetched_at": "2026-07-08 16:12 UTC"
   },
   "debt_gdp": {
    "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "deficit12": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "interest": {
    "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "cs_level": {
    "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "cs_yoy": {
    "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "mspus": {
    "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "mortgage30": {
    "status": "ok",
    "last_obs": "2026-07-02",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "houst": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:12 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "permit": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "msacsr": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "zhvi": {
    "status": "ok",
    "last_obs": "2026-05-31",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "zori": {
    "status": "ok",
    "last_obs": "2026-05-31",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "delinq": {
    "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "inventory": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "wti": {
    "status": "ok",
-   "last_obs": "2026-06-29",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "last_obs": "2026-07-06",
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "gas": {
    "status": "ok",
    "last_obs": "2026-07-06",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "natgas": {
    "status": "ok",
-   "last_obs": "2026-06-29",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "last_obs": "2026-07-06",
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "elec": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "crude_prod": {
    "status": "ok",
-   "last_obs": "2026-06-26",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "last_obs": "2026-07-03",
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "swb_fy": {
    "status": "manual",
    "last_obs": "2025-09-30",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "murder_rate": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "rtci_ytd": {
-   "status": "ok",
+   "status": "failed",
+   "error": "HTTPError: 429 Client Error: Too Many Requests for url: https://raw.githubusercontent.com/AH-Datalytics/rtci/main/docs/app_data/full_table_data.csv",
    "last_obs": "2026-04-01",
    "fetched_at": "2026-07-08 16:13 UTC"
   },
   "overdoses": {
    "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "fertility": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "life_exp": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "marriage": {
    "status": "manual",
    "last_obs": "2023-12-31",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "trust_media": {
    "status": "manual",
    "last_obs": "2025-12-31",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "church": {
    "status": "manual",
    "last_obs": "2020-12-31",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "ai_compute": {
    "status": "ok",
    "last_obs": "2026-06-04",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "ai_releases": {
    "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "sox": {
    "status": "ok",
    "last_obs": "2026-07-08",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "datacenter": {
    "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "usdcny": {
    "status": "ok",
    "last_obs": "2026-07-02",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "china_trade": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "sahm": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "ccsa": {
    "status": "ok",
    "last_obs": "2026-06-20",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "quits": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "temphelp": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "ppi_yoy": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "cons_delinq": {
    "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "sloos": {
    "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "nfci": {
    "status": "ok",
    "last_obs": "2026-07-03",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "gpr": {
    "status": "ok",
    "last_obs": "2026-06-01",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "gscpi": {
    "status": "ok",
    "last_obs": "2026-06-30",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "approval": {
    "status": "ok",
    "last_obs": "2026-06-29",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
   },
   "midterm_odds": {
    "status": "ok",
    "last_obs": "2026-07-08",
-   "fetched_at": "2026-07-08 16:13 UTC"
+   "fetched_at": "2026-07-08 23:16 UTC"
+  },
+  "border_monthly": {
+   "status": "ok",
+   "last_obs": "2026-05-01",
+   "fetched_at": "2026-07-08 23:16 UTC"
   }
  }
 }
