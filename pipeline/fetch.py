@@ -838,7 +838,7 @@ def _cbp_nw_series():
         raise ValueError("no nationwide-encounters -aor CSVs found on CBP page")
     best = {}   # fiscal-year range -> (folder, path); keep newest folder per range (rolling file)
     for pth in set(paths):
-        m = _re.search(r"/files/([^/]+)/nationwide-encounters-fy(\d{2})-fy(\d{2})", pth)
+        m = _re.search(r"/([^/]+)/nationwide-encounters-fy(\d{2})-fy(\d{2})[^/]*-aor\.csv", pth)  # last folder segment; handles both /files/<f>/ and /files/assets/documents/<f>/
         if not m:
             continue
         folder, rng = m.group(1), (m.group(2), m.group(3))
