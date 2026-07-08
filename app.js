@@ -201,7 +201,17 @@
     card.querySelector(".unit").textContent = unitSuffix(cfg);
     card.querySelector(".delta").textContent = cfg.no_delta ? "" : deltaStr(last, cfg);
     charts[cid] = { data: data, cfg: cfg, host: host, names: ss.map(function (s) { return s.name; }) };
-    var btns = card.querySelectorAll(".ranges button");
+    var allBtns = Array.prototype.slice.call(card.querySelectorAll(".ranges button"));
+    // Only offer range buttons the data can actually fill. A series capped at a short
+    // window (e.g. the ICE high-yield feed, which FRED now limits to ~3 years) should not
+    // show dead 10Y/25Y buttons that don't change the view. Always keep 1Y and Max.
+    var spanYears = x.length > 1 ? (x[x.length - 1] - x[0]) / (365.25 * 86400) : 0;
+    var btns = allBtns.filter(function (b) {
+      var y = +b.dataset.y;
+      var show = y >= 9999 || y <= 1 || y <= spanYears + 0.05;
+      b.style.display = show ? "" : "none";
+      return show;
+    });
     btns.forEach(function (b) {
       b.onclick = function () {
         btns.forEach(function (o) { o.classList.remove("on"); });
