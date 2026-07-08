@@ -1,3 +1,4 @@
+# Python deps for pipeline/fetch.py. The CBP border feed (src_cbp_monthly) uses only the stdlib csv module.
 requests>=2.31
 xlrd==2.0.1
 openpyxl>=3.1
