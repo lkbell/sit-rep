@@ -373,5 +373,70 @@
  "what": "The share of after-tax income U.S. households must put toward required debt payments — mortgages plus consumer debt (the Fed's household Debt Service Ratio).",
  "why": "The cleanest read on whether debt loads are actually affordable: unlike raw balances, it accounts for both income and interest rates — what households can carry, not just what they owe.",
  "noteworthy": "It ran ~11–13% for decades and peaked near 13.2% just before the 2008 crisis (over-levered households), then fell to a record low ~9.5% as households deleveraged and rates stayed low. A climb back toward the low-11s would signal debt starting to bite."
+},
+"violent_crime": {
+ "what": "Reported violent crimes — murder, rape, robbery, aggravated assault — per 100,000 people, from FBI data.",
+ "why": "The broad measure of day-to-day safety. Murder is the best-counted crime, but this captures the assaults and robberies most people actually fear.",
+ "noteworthy": "Rose to a peak of 758 in 1991, then fell for a generation. A COVID-era bump in 2020-21 has reversed: 2024 (~359) is roughly the lowest rate since the late 1960s."
+},
+"property_crime": {
+ "what": "Reported property crimes — burglary, larceny-theft, motor-vehicle theft — per 100,000 people, from FBI data.",
+ "why": "The crime most Americans actually experience. It follows a different logic than violence: economics, policing, and even smartphone anti-theft tech.",
+ "noteworthy": "Peaked near 5,350 in 1980 and has fallen almost without interruption since. 2024 (~1,760) is the lowest property-crime rate recorded since 1961."
+},
+"homicide_clearance": {
+ "what": "The share of murders 'cleared' — closed by an arrest or exceptional means — as reported by police to the FBI each year.",
+ "why": "A rare window into whether the justice system actually works, not just how much crime occurs: are killers being caught?",
+ "noteworthy": "About 90% of murders were cleared in the 1960s; the rate slid for decades to a record low near 52% in 2022 — barely half — before recovering to ~61% in 2024. Clearances are counted in the year a case closes, not the year of the killing."
+},
+"incarceration": {
+ "what": "Sentenced state and federal prisoners per 100,000 U.S. residents — prisons only; it excludes the ~600,000 people held in local jails.",
+ "why": "The scale of American imprisonment, long the highest in the developed world, and a barometer of a half-century swing in criminal-justice policy.",
+ "noteworthy": "Roughly quadrupled from 139 (1980) to a peak of 506 (2007-08) during the 'tough on crime' era, then declined. A sharp 2020 drop (COVID-era releases, fewer admissions) took it to ~360 by 2023 — near early-1990s levels."
+},
+"race_ethnicity": {
+ "what": "Each major race and ethnicity group as a share of the U.S. population over time (Census). Hispanic is an ethnicity, counted separately from race, so the lines do not sum to 100.",
+ "why": "The country's changing composition — one of the largest slow-moving forces shaping its politics, culture, and economy.",
+ "noteworthy": "The White (non-Hispanic) share fell from ~83% (1970) to ~56%; Hispanics quadrupled to ~20%; the Black share held near 12-13%; Asians grew fastest in relative terms. Part of the 2010-2020 shift reflects a Census question redesign that raised multiracial counts."
+},
+"foreign_born": {
+ "what": "The share of U.S. residents born outside the country — naturalized citizens, green-card holders, and others (Census/ACS).",
+ "why": "The demographic footprint of immigration, and the backdrop to the border charts — it shapes the labor force, politics, and population growth.",
+ "noteworthy": "Bottomed at a record-low 4.7% in 1970 after mid-century restriction, then rose every decade since. The 2024 level (~14.8%) essentially ties the all-time high set in 1890."
+},
+"pop_growth": {
+ "what": "How fast the U.S. population grows each year, in percent (World Bank via FRED).",
+ "why": "Population growth underwrites economic growth, housing demand, and the worker base that funds entitlements. When it stalls, much else does too.",
+ "noteworthy": "Trended down for decades — from ~1.2%/yr in the 1990s to a record-low ~0.2% in 2021 — then rebounded toward ~1%. Almost all of the recent gain comes from immigration, not births."
+},
+"natural_increase": {
+ "what": "U.S. births minus deaths each year, in millions — population change before immigration is counted.",
+ "why": "The domestic engine of population growth. As it nears zero, the country's growth depends entirely on immigration.",
+ "noteworthy": "Collapsed from ~2.0 million/yr in 1990 to just ~0.2 million in 2021, as births fell (~16% since 2007) and deaths rose (aging plus COVID). It has recovered only partway; the U.S. is nearing the point where deaths could exceed births."
+},
+"age_65plus": {
+ "what": "Americans aged 65 and older as a share of the total population (World Bank via FRED).",
+ "why": "The aging of the country in one line — it drives Social Security and Medicare costs and shrinks the ratio of workers to retirees.",
+ "noteworthy": "Rose from under 10% in 1970 to roughly 18% today, with the fastest climb in the 2010s as Baby Boomers began turning 65. The rise slows after about 2030 once all Boomers are 65+."
+},
+"naep_reading": {
+ "what": "Reading achievement of U.S. 9- and 13-year-olds on the NAEP Long-Term Trend test — actual scores on a stable 0-500 scale since 1971, not diplomas or enrollment.",
+ "why": "The hardest-to-game measure of whether kids can actually read. Attainment stats can be inflated; a standardized score cannot.",
+ "noteworthy": "Flat-to-slightly-up for decades, then falling after 2012. By 2023, 13-year-olds' reading was back near its early-1970s starting point, with lower-performing students dropping the most."
+},
+"naep_math": {
+ "what": "Math achievement of U.S. 9- and 13-year-olds on the NAEP Long-Term Trend test (stable 0-500 scale since 1973).",
+ "why": "The cleanest read on math skills over 50 years — and math showed the sharpest pandemic-era losses.",
+ "noteworthy": "Both ages gained into a 2012 peak, then fell. Age-13 math dropped 14 points from 2012 to 2023 — the lowest since the 1990s and the largest decline in the series' history."
+},
+"chronic_absenteeism": {
+ "what": "The share of public-school students who are chronically absent — missing at least 10% of school days, about 18+ days a year.",
+ "why": "Attendance is the precondition for learning; the post-COVID surge here is a leading explanation for falling test scores.",
+ "noteworthy": "Held near 15% before the pandemic, then nearly doubled to ~28% in 2021-22. It is receding slowly (~24% in 2023-24) but remains far above normal — the clearest sign school routines have not fully recovered."
+},
+"pisa_math": {
+ "what": "Average math score of U.S. 15-year-olds versus the OECD-country average, from the PISA test given every three years.",
+ "why": "The benchmark for how American students stack up against peer nations — the international scoreboard on competitiveness.",
+ "noteworthy": "U.S. math has trailed the OECD average for two decades and hit a record-low 465 in 2022. It now sits close to the average mainly because the OECD average itself fell in the pandemic, not because the U.S. gained. (U.S. reading, by contrast, stays above average.)"
 }
 }
