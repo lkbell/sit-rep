@@ -43,17 +43,33 @@ def src_fred(series_id):
     return out
 
 def src_treasury_debt():
+    """Treasury 'Debt to the Penny' (total public debt outstanding), reduced to monthly.
+    The full history is ~8k daily rows; pulling it in one big request occasionally
+    exceeds the read timeout and reds the whole feed, so we page in small, fast chunks
+    with a short retry + generous timeout (a transient API slowdown then just retries
+    that page instead of failing the feed)."""
     base = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny"
     out, page = [], 1
     while True:
-        j = get(base, {"fields": "record_date,tot_pub_debt_out_amt", "page[size]": 10000, "page[number]": page, "sort": "record_date"}).json()
+        j = None
+        for attempt in range(3):
+            try:
+                j = get(base, {"fields": "record_date,tot_pub_debt_out_amt", "page[size]": 1000,
+                               "page[number]": page, "sort": "record_date"}, timeout=90).json()
+                break
+            except requests.exceptions.RequestException:
+                if attempt == 2:
+                    raise
+                time.sleep(2 * (attempt + 1))
         for d in j["data"]:
             out.append((d["record_date"], float(d["tot_pub_debt_out_amt"])))
         if not j["links"].get("next"):
             break
         page += 1
-        if page > 5:
+        if page > 30:   # ~8k rows now at 1000/page = 9 pages; headroom for growth
             break
+    if not out:
+        raise ValueError("no debt observations from Treasury debt_to_penny")
     # keep last observation of each month
     bym = {}
     for dt, v in out:
