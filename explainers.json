@@ -353,5 +353,25 @@
  "what": "The NY Fed's global supply chain pressure index — shipping costs and delivery times worldwide, in standard deviations from normal.",
  "why": "Supply-chain stress shows up here months before it reaches goods prices — it explained much of the 2021–22 inflation surge.",
  "noteworthy": "The 2021 peak (+4.3σ) was the most stressed reading ever constructed; negative values mean looser-than-normal chains. A renewed spike would be an early inflation warning."
+},
+"cons_delinq": {
+ "what": "The share of credit-card and other consumer loans at commercial banks that are past due — the two lines are card delinquencies and all-consumer-loan delinquencies.",
+ "why": "Where consumer strain becomes visible first: households fall behind on cards and installment loans before it shows up in spending or the jobs data.",
+ "noteworthy": "Credit-card delinquency bottomed near 1.6% in 2021 (stimulus and forbearance) and has climbed back above its pre-pandemic ~2.5%; the 2009 peak was ~6.8%. A push through the pre-COVID norm is the signal the consumer is genuinely stretched, not just normalizing."
+},
+"baa_spread": {
+ "what": "The extra yield investors demand to hold medium-grade (Baa/BBB) corporate bonds — the lowest rung of investment grade — over Treasuries.",
+ "why": "A long-history cousin of the high-yield spread: it prices corporate default risk and widens in every recession, and it reaches back to 1986, so it covers cycles the junk-bond feed (capped by its data provider at ~3 years) can't show.",
+ "noteworthy": "Roughly 1.5–2pp is normal; it blew out past 6pp in 2008 and above 3pp in 2020 and the 2011 euro crisis. Sustained widening off a low base is the early credit-stress tell; a spike is the market pricing a downturn in real time."
+},
+"consumer_debt": {
+ "what": "What U.S. households owe outside their mortgage — total consumer credit, split into revolving (mostly credit cards) and nonrevolving (mostly auto and student loans), in trillions of dollars.",
+ "why": "The scale and mix of consumer borrowing. Balances rising with the economy and population is normal — the signal is in the pace and in the revolving share, read alongside how affordable the payments are (the debt-service chart).",
+ "noteworthy": "Total consumer credit passed 5 trillion dollars and credit-card balances passed 1.3 trillion by 2024, both records. Because raw balances almost always rise, watch for acceleration in the revolving line — households leaning harder on cards is more often strain than strength."
+},
+"debt_burden": {
+ "what": "The share of after-tax income U.S. households must put toward required debt payments — mortgages plus consumer debt (the Fed's household Debt Service Ratio).",
+ "why": "The cleanest read on whether debt loads are actually affordable: unlike raw balances, it accounts for both income and interest rates — what households can carry, not just what they owe.",
+ "noteworthy": "It ran ~11–13% for decades and peaked near 13.2% just before the 2008 crisis (over-levered households), then fell to a record low ~9.5% as households deleveraged and rates stayed low. A climb back toward the low-11s would signal debt starting to bite."
 }
 }
