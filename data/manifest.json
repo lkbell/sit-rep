@@ -1,329 +1,290 @@
 {
- "generated_at": "2026-10-21 18:43 UTC",
+ "generated_at": "2026-10-22 18:37 UTC",
  "charts": {
   "sp500": {
    "status": "ok",
-   "last_obs": "2026-10-21",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "last_obs": "2026-10-22",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "nasdaq": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-19",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-21",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "dgs10": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-16",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-20",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "t10y2y": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-19",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-21",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "hy_oas": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-19",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-21",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "baa_spread": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-16",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-20",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "vix": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-19",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-21",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "dollar": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-10-16",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "gold": {
    "status": "ok",
-   "last_obs": "2026-10-21",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "last_obs": "2026-10-22",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "btc": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-19",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-21",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "fedfunds": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "walcl": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-10-14",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "m2_yoy": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-08-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "cpi_yoy": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "unrate": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "payems_chg": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "lfpr_prime": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "jtsjol": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-08-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "icsa": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-10",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-17",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "gdp_growth": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "wage_vs_cpi": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "umcsent": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-08-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "retail_yoy": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "indpro_yoy": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "t5yie": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-19",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-21",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "debt": {
    "status": "ok",
-   "last_obs": "2026-10-19",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "last_obs": "2026-10-20",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "debt_gdp": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-01-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "deficit12": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "interest": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "cs_level": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-07-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "cs_yoy": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-07-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "mspus": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "mortgage30": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-15",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-22",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "houst": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "permit": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "msacsr": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-08-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "zhvi": {
    "status": "ok",
    "last_obs": "2026-09-30",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "zori": {
    "status": "ok",
    "last_obs": "2026-09-30",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "delinq": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "inventory": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "wti": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-14",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-20",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "gas": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-12",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-19",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "natgas": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-14",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-20",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "elec": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:30 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "crude_prod": {
    "status": "ok",
    "last_obs": "2026-10-16",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "swb_fy": {
    "status": "manual",
    "last_obs": "2025-09-30",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "murder_rate": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "rtci_ytd": {
    "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "overdoses": {
    "status": "ok",
    "last_obs": "2026-05-01",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "fertility": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "life_exp": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "marriage": {
    "status": "manual",
    "last_obs": "2023-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "trust_media": {
    "status": "manual",
    "last_obs": "2025-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "church": {
    "status": "manual",
    "last_obs": "2020-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "ai_compute": {
    "status": "ok",
    "last_obs": "2026-09-09",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "ai_releases": {
    "status": "ok",
    "last_obs": "2026-07-01",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "sox": {
    "status": "ok",
-   "last_obs": "2026-10-21",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "last_obs": "2026-10-22",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "datacenter": {
    "status": "failed",
@@ -332,168 +293,154 @@
    "fetched_at": "2026-08-13 15:18 UTC"
   },
   "usdcny": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-10-16",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "china_trade": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-08-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "sahm": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "ccsa": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-03",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-10",
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "quits": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-08-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "temphelp": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "ppi_yoy": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:36 UTC"
   },
   "cons_delinq": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "sloos": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-07-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "nfci": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
-   "last_obs": "2026-10-09",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "status": "ok",
+   "last_obs": "2026-10-16",
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "gpr": {
    "status": "ok",
    "last_obs": "2026-09-01",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "gscpi": {
    "status": "ok",
    "last_obs": "2026-09-30",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "approval": {
    "status": "ok",
    "last_obs": "2026-10-05",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "midterm_odds": {
    "status": "ok",
-   "last_obs": "2026-10-21",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "last_obs": "2026-10-22",
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "consumer_debt": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-08-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "debt_burden": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2026-04-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "violent_crime": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "property_crime": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "homicide_clearance": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "incarceration": {
    "status": "manual",
    "last_obs": "2023-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "race_ethnicity": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "foreign_born": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "pop_growth": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2025-01-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "natural_increase": {
    "status": "manual",
    "last_obs": "2024-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "age_65plus": {
-   "status": "failed",
-   "error": "ValueError: unexpected FRED csv shape",
+   "status": "ok",
    "last_obs": "2025-01-01",
-   "fetched_at": "2026-10-20 18:31 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "naep_reading": {
    "status": "manual",
    "last_obs": "2023-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "naep_math": {
    "status": "manual",
    "last_obs": "2023-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "chronic_absenteeism": {
    "status": "manual",
    "last_obs": "2024-06-30",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "pisa_math": {
    "status": "manual",
    "last_obs": "2022-12-31",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   },
   "border_monthly": {
    "status": "ok",
    "last_obs": "2026-07-01",
-   "fetched_at": "2026-10-21 18:43 UTC"
+   "fetched_at": "2026-10-22 18:37 UTC"
   }
  }
 }
