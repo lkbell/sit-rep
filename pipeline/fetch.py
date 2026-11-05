@@ -303,16 +303,19 @@ def src_gscpi():
 
 def src_owid(slug):
     txt = get("https://ourworldindata.org/grapher/" + slug + ".csv", timeout=120).text
-    rows = list(csv.reader(io.StringIO(txt)))
+    rows = [r for r in csv.reader(io.StringIO(txt)) if r and not r[0].startswith("#")]
     hdr = rows[0]
-    ti = hdr.index("Day") if "Day" in hdr else hdr.index("Year")
+    hdr_norm = [h.strip().lower() for h in hdr]
+    ti = next((hdr_norm.index(c) for c in ("day", "year", "date", "month") if c in hdr_norm), None)
+    if ti is None:
+        raise ValueError("no day/year/date/month column; header=%s" % hdr)
     out = []
     for row in rows[1:]:
         if row and row[0] == "United States" and row[-1]:
             d = row[ti] if len(row[ti]) == 10 else row[ti] + "-12-31"
             out.append((d, float(row[-1])))
     if not out:
-        raise ValueError("no US rows in OWID csv")
+        raise ValueError("no US rows in OWID csv; header=%s" % hdr)
     return sorted(out)
 
 def src_votehub_approval(which):
